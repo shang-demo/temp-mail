@@ -1,0 +1,14 @@
+<div>
+  <div class="m-b-xs" ng-repeat="field in ngModel">
+    <div class="col-md-4">
+      <input type="text" class="form-control" placeholder="描述" ng-model="field.name">
+    </div>
+    <div class="col-md-6">
+      <input type="text" class="form-control" placeholder="内容" ng-model="field.value">
+    </div>
+    <div class="form-control-static">
+      <a class="btn btn-xs btn-danger" ng-if="ngModel.length > 1" href="" ng-click="remove(field)">删除</a>
+      <a class="btn btn-xs btn-info" href="" ng-if="$last" ng-click="add()">添加</a>
+    </div>
+  </div>
+</div>

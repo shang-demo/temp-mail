@@ -1,0 +1,48 @@
+
+/* notification bar*/
+.notification-bar {
+  width: 100%;
+  position: fixed;
+  z-index: 10000;
+  overflow: scroll;
+  text-align: center;
+  display: block;
+  overflow: visible;
+  pointer-events: none;
+
+  button:focus {
+    outline:none
+  }
+
+  .alert {
+    height: 55px;
+    position: relative;
+    float: none;
+    pointer-events: auto;
+    .message {
+      vertical-align: middle;
+      display: table-cell;
+    }
+  }
+  /*beginning: notification pop up animation */
+  .alert.ng-enter, .alert.ng-leave {
+    -webkit-transition:all linear 0.5s;
+    -moz-transition:all linear 0.5s;
+    -o-transition:all linear 0.5s;
+    transition:all linear 0.5s;
+  }
+
+  /*full hidden state*/
+  .alert.ng-enter,
+  .alert.ng-leave.ng-leave-active {
+    margin-top: -75px;
+    opacity: 0;
+  }
+
+  /*full visible state*/
+  .alert.ng-leave,
+  .alert.ng-enter.ng-enter-active {
+    margin-top: 0;
+    opacity: 1;
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "name": "Template",
+  "version": "0.1.0",
+  "author": "SHANG",
+  "license": "MIT",
+  "engines": {
+    "node": ">=7.0.0"
+  },
+  "scripts": {
+    "start": "nodemon --harmony-async-await app/app.js",
+    "lint": "eslint --fix"
+  },
+  "dependencies": {
+    "bluebird": "^3.4.6",
+    "jsonwebtoken": "^7.1.9",
+    "kcors": "^2.2.0",
+    "koa": "^2.0.0-alpha.7",
+    "koa-bodyparser": "^3.2.0",
+    "koa-router": "^7.0.1",
+    "koa-static": "^3.0.0",
+    "koa-views": "^5.1.2",
+    "lodash": "^4.16.4",
+    "mongoose": "^4.6.4",
+    "nodemailer": "^2.6.4",
+    "pino": "^2.12.4",
+    "redis": "^2.6.2",
+    "request": "^2.75.0"
+  },
+  "devDependencies": {
+    "browser-sync": "^2.17.3",
+    "eslint": "3.8.0",
+    "eslint-config-airbnb": "12.0.0",
+    "eslint-plugin-import": "2.0.1",
+    "eslint-plugin-jsx-a11y": "2.2.3",
+    "eslint-plugin-react": "6.4.1",
+    "gulp": "github:gulpjs/gulp#4.0",
+    "gulp-cached": "1.1.0",
+    "gulp-eslint": "^3.0.1",
+    "gulp-load-plugins": "^1.3.0",
+    "gulp-remember": "0.3.1"
+  }
+}

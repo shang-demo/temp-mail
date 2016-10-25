@@ -1,0 +1,115 @@
+<div class="panel no-border">
+  <div class="h5 panel-heading wrapper b-b b-light">
+    <span>Webhook 详情</span>
+  </div>
+  <div class="panel-body">
+    <div class="container-fluid webhook">
+      <div class="modal-body">
+        <form class="form-horizontal webhook" ng-class="{submitted: form.submitted}" role="form" name="form">
+          <fieldset ng-disabled="!editing">
+            <div class="form-group">
+              <label class="col-sm-2 control-label" for="name">{{ "webhook.name" | translate }}</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="name" name="name" ng-model="webhook.name" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label" for="payloadAddress">{{ "webhook.payloadAddress" | translate
+                }}</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control" id="payloadAddress" ng-model="webhook.payloadAddress" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label">{{ "webhook.method" | translate }}</label>
+              <div class="col-sm-9">
+                <select class="form-control" ng-model="webhook.method">
+                  <option value="email">email</option>
+                  <option value="GET">GET</option>
+                  <option value="POST">POST</option>
+                  <option value="PUT">PUT</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group" ng-if="(webhook.method === 'POST' || webhook.method === 'PUT')">
+              <label class="col-sm-2 control-label">{{ "webhook.contentType" | translate }}</label>
+              <div class="col-sm-9">
+                <select class="form-control" ng-model="webhook.contentType">
+                  <option value="application/json">application/json</option>
+                  <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label">{{ "webhook.resolveBody" | translate }}</label>
+              <div class="col-sm-9 checkbox">
+                <label>
+                  <input type="checkbox" ng-model="webhook.resolveBody">{{ "general.yes" | translate }}
+                </label>
+              </div>
+            </div>
+
+            <div class="form-group" ng-if="webhook.resolveBody">
+              <label class="col-sm-2 control-label">{{ "webhook.headerFields" | translate }}</label>
+              <div class="col-sm-9 row">
+                <div custom-fields ng-model="webhook.headerFields"></div>
+              </div>
+            </div>
+            <div class="form-group" ng-if="webhook.resolveBody">
+              <label class="col-sm-2 control-label">{{ "webhook.bodyFields" | translate }}</label>
+              <div class="col-sm-9 row">
+                <div custom-fields ng-model="webhook.bodyFields"></div>
+              </div>
+            </div>
+            <div class="form-group" ng-if="events.length">
+              <label class="col-sm-2 control-label">{{ "webhook.events" | translate }}</label>
+              <div class="col-sm-9">
+                <table class="table">
+                  <thead>
+                  <tr>
+                    <th>{{ "webhookEvents.name" | translate }}</th>
+                    <th>{{ "webhookEvents.status" | translate }}</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr ng-repeat="event in events">
+                    <td>{{event.displayName}}</td>
+                    <td>
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox" ng-checked="isEventEnabled(event)" ng-click="toggleEvent(event)">
+                          {{(isEventEnabled(event)? "general.enabled" : "general.disabled") | translate}}
+                        </label>
+                      </div>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label">{{ "general.suspended" | translate }}</label>
+              <div class="col-sm-9">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" ng-model="webhook.suspended">{{ "general.yes" | translate }}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-warning" ui-sref="^.list" ng-show="!editing">返回</button>
+        <button class="btn btn-danger"  ng-click="delete()" ng-show="!editing">删除</button>
+        <button class="btn btn-primary" ng-click="edit()" ng-show="!editing">修改</button>
+        <button class="btn btn-warning" ng-click="cancel(form)" ng-show="editing">取消</button>
+        <button class="btn btn-primary"  ng-click="save(form)" ng-show="editing">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+

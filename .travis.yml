@@ -1,0 +1,9 @@
+language: node_js
+node_js:
+  - "7.0.0"
+services:
+  - mongodb
+before_script:
+  - npm install -g mocha
+env:
+  - key="mykey"
