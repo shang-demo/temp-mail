@@ -103,7 +103,7 @@ const svc = {
     }
 
     // eslint-disable-next-line no-param-reassign
-    str = str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+    str = str.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
     if (disAbleRegExp === true) {
       return str;
     }

@@ -21,8 +21,8 @@ catch (e) {
 }
 
 // log
-var pretty;
-if(env === 'development') {
+let pretty;
+if (env === 'development') {
   pino.pretty = require('./utilities/pino-pretty');
   pretty = pino.pretty();
   pretty.pipe(process.stdout);
@@ -30,7 +30,7 @@ if(env === 'development') {
 
 global.logger = pino(undefined, pretty);
 
-if(env === 'development') {
+if (env === 'development') {
   logger.level = 'trace';
 }
 

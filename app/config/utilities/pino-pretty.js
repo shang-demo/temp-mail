@@ -1,66 +1,62 @@
-'use strict';
 
-var split = require('split2');
-var Parse = require('fast-json-parse');
-var chalk = require('chalk');
+const split = require('split2');
+const Parse = require('fast-json-parse');
+const chalk = require('chalk');
 
-var levels = {
+const levels = {
   60: 'FATAL',
   50: 'ERROR',
   40: 'WARN',
   30: 'INFO',
   20: 'DEBUG',
-  10: 'TRACE'
+  10: 'TRACE',
 };
-
-var standardKeys = [
+const standardKeys = [
   'pid',
   'hostname',
   'name',
   'level',
   'msg',
   'time',
-  'v'
+  'v',
 ];
 
 function withSpaces(value) {
-  var lines = value.split('\n');
-  for(var i = 1; i < lines.length; i++) {
-    lines[i] = '    ' + lines[i];
-  }
-  return lines.join('\n');
+  let lines = value.split('\n');
+  lines.splice(0, 1);
+  return lines.map(item => `    ${item}`).join('\n');
 }
 
 function filter(value) {
-  var keys = Object.keys(value);
-  var result = '';
+  let keys = Object.keys(value);
+  let result = '';
 
-  for(var i = 0; i < keys.length; i++) {
-    if (standardKeys.indexOf(keys[i]) < 0) {
-      result += '    ' + keys[i] + ': ' + withSpaces(JSON.stringify(value[keys[i]], null, 2)) + '\n';
+  keys.forEach((item) => {
+    if (standardKeys.indexOf(item) < 0) {
+      result += `    ${item}: ${withSpaces(JSON.stringify(item[item], null, 2))}\n`;
     }
-  }
+  });
 
   return result;
 }
 
 function isPinoLine(line) {
-  return line.hasOwnProperty('hostname') && line.hasOwnProperty('pid') && (line.hasOwnProperty('v') && line.v === 1);
+  return {}.hasOwnProperty.call(line, 'hostname') && {}.hasOwnProperty.call(line, 'pid') && ({}.hasOwnProperty.call(line, 'v') && line.v === 1);
 }
 
 function pretty(opts, mapLineFun) {
-  var timeTransOnly = opts && opts.timeTransOnly;
-  var levelFirst = opts && opts.levelFirst;
+  let timeTransOnly = opts && opts.timeTransOnly;
+  let levelFirst = opts && opts.levelFirst;
 
-  var stream = split(mapLineFun ? mapLineFun : mapLine);
-  var ctx;
-  var levelColors;
+  let stream = split(mapLineFun || mapLine);
+  let ctx;
+  let levelColors;
 
-  var pipe = stream.pipe;
+  let pipe = stream.pipe;
 
-  stream.pipe = function (dest, opts) {
+  stream.pipe = function streamPipe(dest, options) {
     ctx = new chalk.constructor({
-      enabled: !!(chalk.supportsColor && dest.isTTY)
+      enabled: !!(chalk.supportsColor && dest.isTTY),
     });
 
     levelColors = {
@@ -69,32 +65,33 @@ function pretty(opts, mapLineFun) {
       40: ctx.yellow,
       30: ctx.green,
       20: ctx.blue,
-      10: ctx.grey
+      10: ctx.grey,
     };
 
-    pipe.call(stream, dest, opts);
+    pipe.call(stream, dest, options);
   };
 
   return stream;
 
   function mapLine(line) {
-    var parsed = new Parse(line);
-    var value = parsed.value;
+    /* eslint-disable no-param-reassign */
+    let parsed = new Parse(line);
+    let value = parsed.value;
 
     if (parsed.err || !isPinoLine(value)) {
       // pass through
-      return line + '\n';
+      return `${line}\n`;
     }
 
     if (timeTransOnly) {
       value.time = asLocaleDate(value.time);
-      return JSON.stringify(value) + '\n';
+      return `${JSON.stringify(value)}\n`;
     }
 
-    line = (levelFirst) ? asColoredLevel(value) + ' [' + asLocaleDate(value.time) + ']' : '[' + asLocaleDate(value.time) + '] ' + asColoredLevel(value);
+    line = (levelFirst) ? `${asColoredLevel(value)} [${asLocaleDate(value.time)}]` : `[${asLocaleDate(value.time)}] ${asColoredLevel(value)}`;
 
     if (value.name) {
-      line += ' (' + value.name + ' )';
+      line += ` (${value.name} )`;
     }
     line += ': ';
     if (value.msg) {
@@ -102,8 +99,9 @@ function pretty(opts, mapLineFun) {
     }
     line += '\n';
     if (value.type === 'Error') {
-      line += '    ' + withSpaces(value.stack) + '\n';
-    } else {
+      line += `    ${withSpaces(value.stack)}\n`;
+    }
+    else {
       line += filter(value);
     }
     return line;
