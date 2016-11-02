@@ -3,7 +3,7 @@ d='template2'
 dev:
 	@sh config/start.sh
 node-dev:
-	node-dev app/app.js
+	node-dev --harmony-async-await app/app.js
 push:
 	git push origin template
 merge:

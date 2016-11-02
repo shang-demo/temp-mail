@@ -7,7 +7,7 @@
     "node": ">=7.0.0"
   },
   "scripts": {
-    "start": "nodemon --harmony-async-await app/app.js",
+    "start": "node-dev --harmony-async-await app/app.js",
     "lint": "eslint --fix"
   },
   "dependencies": {

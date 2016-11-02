@@ -1,12 +1,13 @@
 #!/bin/bash
 
 function startServer {
-	node-dev app/app.js
+	node-dev --harmony-async-await app/app.js
 }
 
 function startGulp {
 #	reniceNode &
-	gulp dev
+#	gulp dev
+  gulp wlint
 }
 
 function reniceNode {
