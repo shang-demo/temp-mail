@@ -28,7 +28,7 @@ async function init() {
     const start = new Date();
     await next();
     const ms = new Date() - start;
-    logger.info(`${ctx.method} ${ctx.url} - ${ctx.status} - ${ms}ms`);
+    logger.trace(`${ctx.method} ${ctx.url} - ${ctx.status} - ${ms}ms`);
   });
 
 

@@ -1,5 +1,9 @@
 
 module.exports = {
+  log: {
+    pretty: true,
+    level: 'trace',
+  },
   dbName: 'noDbName',
   superSecret: process.env.SUPER_SECRET || 'SUPER_SECRET',
   execCmdKey: process.env.EXEC_CMD_KEY || 'key',

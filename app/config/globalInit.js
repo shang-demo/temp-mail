@@ -1,4 +1,3 @@
-const pino = require('pino');
 
 // set bluebird and lodash
 global.Promise = require('bluebird');
@@ -20,17 +19,5 @@ catch (e) {
   throw e;
 }
 
-// log
-let pretty;
-if (env === 'development') {
-  pino.pretty = require('./utilities/pino-pretty');
-  pretty = pino.pretty();
-  pretty.pipe(process.stdout);
-}
-
-global.logger = pino(undefined, pretty);
-
-if (env === 'development') {
-  logger.level = 'trace';
-}
-
+// set logger
+global.logger = require('./utilities/logger');
