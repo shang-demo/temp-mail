@@ -21,10 +21,16 @@ catch (e) {
 }
 
 // log
-let pretty;
-if (env === 'development') {
+var pretty;
+if(env === 'development') {
+  pino.pretty = require('./utilities/pino-pretty');
   pretty = pino.pretty();
   pretty.pipe(process.stdout);
 }
 
 global.logger = pino(undefined, pretty);
+
+if(env === 'development') {
+  logger.level = 'trace';
+}
+
