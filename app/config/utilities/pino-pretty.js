@@ -1,4 +1,3 @@
-
 const split = require('split2');
 const Parse = require('fast-json-parse');
 const chalk = require('chalk');
@@ -49,23 +48,18 @@ function pretty(opts, mapLineFun) {
   let levelFirst = opts && opts.levelFirst;
 
   let stream = split(mapLineFun || mapLine);
-  let ctx;
   let levelColors;
 
   let pipe = stream.pipe;
 
   stream.pipe = function streamPipe(dest, options) {
-    ctx = new chalk.constructor({
-      enabled: !!(chalk.supportsColor && dest.isTTY),
-    });
-
     levelColors = {
-      60: ctx.bgRed,
-      50: ctx.red,
-      40: ctx.yellow,
-      30: ctx.green,
-      20: ctx.blue,
-      10: ctx.grey,
+      60: chalk.bgRed,
+      50: chalk.red,
+      40: chalk.yellow,
+      30: chalk.green,
+      20: chalk.blue,
+      10: chalk.grey,
     };
 
     pipe.call(stream, dest, options);
