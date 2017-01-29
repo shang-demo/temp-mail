@@ -16,7 +16,7 @@ function getCommonConfig() {
     clean: {                   // 清除生成文件的路径
       src: [
         `${alterableSetting.basePath}**/*`,
-        'app/public/styles/',
+        'clinet/styles/',
         `!${alterableSetting.basePath}/.git/`,
         `!${alterableSetting.basePath}/CNAME`,
         `!${alterableSetting.basePath}/Makefile`,
@@ -33,35 +33,35 @@ function getCommonConfig() {
     less: {
       watcherPath: [
         'less/**/*.less',
-        'app/public/common/**/*.less',
-        'app/public/components/**/*.less',
+        'clinet/common/**/*.less',
+        'clinet/components/**/*.less',
       ],    // watch:sass 文件路径
       src: [
         'less/variables.less',
-        'app/public/common/**/*.less',
-        'app/public/components/**/*.less',
+        'clinet/common/**/*.less',
+        'clinet/components/**/*.less',
       ],
       opt: {},
-      dest: 'app/public/styles',
+      dest: 'clinet/styles',
     },
     injectHtmlDev: {            // development环境
       src: 'index.html',
       opt: {
-        cwd: 'app/views',
-        base: 'app/views',
+        cwd: 'server/views',
+        base: 'server/views',
       },
       cssSource: [                    // 需要引入的css
-        'app/public/styles/**/*.css',
+        'clinet/styles/**/*.css',
       ],
       jsSource: [         // 需要引入的js, config.specJs会加载在其上面
-        'app/public/**/*.js',
-        '!app/public/vendor/**/*',
-        '!app/public/framework/**/*',
+        'clinet/**/*.js',
+        '!clinet/vendor/**/*',
+        '!clinet/framework/**/*',
       ],
-      libJsPrefix: 'app/public/vendor',  // libJS  依赖于 config.libJs.src; 需要加上前缀
-      libCssPrefix: 'app/public',       // libCss  依赖于 config.libCss.src; 需要加上前缀
-      ignorePath: 'app/public/',       // 路径去除, 相当于 base
-      dest: 'app/views',
+      libJsPrefix: 'clinet/vendor',  // libJS  依赖于 config.libJs.src; 需要加上前缀
+      libCssPrefix: 'clinet',       // libCss  依赖于 config.libCss.src; 需要加上前缀
+      ignorePath: 'clinet/',       // 路径去除, 相当于 base
+      dest: 'server/views',
     },
     libCss: {             // lib css 需要引入的的css
       src: [              // src 可以为空数组
@@ -70,9 +70,9 @@ function getCommonConfig() {
         'vendor/font-awesome/css/font-awesome.min.css',
       ],
       opt: {
-        cwd: 'app/public/',
+        cwd: 'clinet/',
       },
-      dest: 'app/public/styles',
+      dest: 'clinet/styles',
     },
     libJs: {              // lib js, 需要按照顺序书写
       src: [
@@ -87,8 +87,8 @@ function getCommonConfig() {
         'lodash/dist/lodash.min.js',
       ],
       opt: {
-        cwd: 'app/public/vendor',
-        base: 'app/public/vendor',
+        cwd: 'clinet/vendor',
+        base: 'clinet/vendor',
       },
       dest: path.join(alterableSetting.publicPath, 'js'),          // libJs在prod环境下才需要 输出, 故dest为 prod环境的dest
     },
@@ -104,8 +104,8 @@ function getCommonConfig() {
         '!framework/**/*',
       ],
       opt: {
-        cwd: 'app/public/',
-        base: 'app/public/',
+        cwd: 'clinet/',
+        base: 'clinet/',
       },
       filters: [{
         src: ['app.js'],
@@ -128,24 +128,24 @@ function getCommonConfig() {
     images: {
       src: [],
       opt: {
-        cwd: 'app/public/images',
-        base: 'app/public',
+        cwd: 'clinet/images',
+        base: 'clinet',
       },
       dest: alterableSetting.publicPath,
     },
     fonts: {
-      src: ['app/public/vendor/font-awesome/fonts/**/*'],
+      src: ['clinet/vendor/font-awesome/fonts/**/*'],
       dest: path.join(alterableSetting.publicPath, 'styles/fonts'),
     },
     injectHtmlProd: {
       src: 'index.html',
       opt: {
-        cwd: 'app/views',
-        base: 'app/views',
+        cwd: 'server/views',
+        base: 'server/views',
       },
       cssSource: [                    // 需要引入的cs
-        'app/public/styles/bootstrap.min.css',
-        'app/public/styles/**/*.css',
+        'clinet/styles/bootstrap.min.css',
+        'clinet/styles/**/*.css',
       ],
       injectSource: [
         path.join(alterableSetting.publicPath, 'styles/**/*.css'),
@@ -173,8 +173,8 @@ function getCommonConfig() {
         '!framework/**/*',
       ],
       opt: {
-        cwd: 'app/public/',
-        base: 'app/',
+        cwd: 'clinet/',
+        base: 'server/',
       },
       config: {
         module: 'shangAngularTemplate',
@@ -188,9 +188,8 @@ function getCommonConfig() {
     },
     server: {
       jsWatch: [
-        'app/**/*.js',
-        '!app/public/**/*',
-        '!app/views/**/*',
+        'server/**/*.js',
+        '!server/views/**/*',
       ],
       src: [
         '**/*',
@@ -199,8 +198,8 @@ function getCommonConfig() {
         '!index.html',
       ],
       opt: {
-        cwd: 'app/',
-        base: 'app/',
+        cwd: 'server/',
+        base: 'server/',
       },
       dest: alterableSetting.basePath,
     },
@@ -223,8 +222,8 @@ function getCommonConfig() {
         'config/**/*',
       ],
       opt: {
-        cwd: 'app/',
-        base: 'app/',
+        cwd: 'server/',
+        base: 'server/',
       },
       dest: alterableSetting.basePath,
     }, {
@@ -232,8 +231,8 @@ function getCommonConfig() {
         'languages/**/*',
       ],
       opt: {
-        cwd: 'app/public',
-        base: 'app/public',
+        cwd: 'clinet',
+        base: 'clinet',
       },
       dest: alterableSetting.publicPath,
     }],
@@ -243,9 +242,9 @@ function getCommonConfig() {
         online: true,
         port: 13370,
         files: [
-          'app/public/**/*',
-          '!app/public/styles/**/*',
-          'app/views/**/*',
+          'clinet/**/*',
+          '!clinet/styles/**/*',
+          'server/views/**/*',
         ],
       },
     },
@@ -274,8 +273,8 @@ function getSpecConfig() {
     theme: {
       src: [],
       opt: {
-        cwd: 'app/public',
-        base: 'app/public',
+        cwd: 'clinet',
+        base: 'clinet',
       },
       dest: alterableSetting.publicPath,
       storeFileNameSpaceName: 'nightTheme',

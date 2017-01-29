@@ -1,9 +1,9 @@
 .PHONY: all test clean static
-d='template2'
+d=template2
 dev:
 	@sh config/start.sh
 node-dev:
-	node-dev --harmony-async-await app/app.js
+	node-dev --harmony-async-await server/index.js
 push:
 	git push origin template
 merge:
@@ -20,31 +20,29 @@ test:
 	fi
 prod:
 	gulp prod
-	node production/app.js
+	NODE_ENV=production PRETTY_LOG=1 node --harmony-async-await production/app.js
 pushHeroku: 
 	cp ./package.json ./production
-	gsed -i 's/"start": "NODE_ENV=.*/"start": "NODE_ENV=heroku pm2 start .\/app.js --no-daemon",/g' ./production/package.json
+	gsed -i 's/"start": ".*/"start": "NODE_ENV=heroku pm2 start .\/index.js --no-daemon",/g' ./production/package.json
 	cd ./production && git add -A && git commit -m "auto" && git push heroku master && heroku logs --tail
+pushProd:
+	@ sh ./config/push.sh
 static:
 	gulp static
 	cd static && hs
 copy:
-	cp -r ./ ../$(d)
-	if [ -n "$(b)" ]; \
+	@ if [ -e ../$(d)/ ]; \
 	then \
-		rm -rf ../$(d)/app/public; \
-		rm -rf ../$(d)/config/gulp/config.js; \
-		mv ../$(d)/config/gulp/backendConfig.js ../$(d)/config/gulp/config.js; \
-		rm -rf ../$(d)/app/views/index.html; \
-		mv ../$(d)/app/views/backendIndex.html ../$(d)/app/views/index.html; \
-	else \
-		rm -rf ../$(d)/config/gulp/backendConfig.js; \
-		rm -rf ../$(d)/app/views/backendIndex.html; \
+		echo "../$(d)/ 目录存在!!"; \
+		exit 1; \
 	fi
-	rm -rf ../$(d)/.idea
-	rm -rf ../$(d)/.git
-	cd ../$(d)/
+	mkdir -p ../$(d)/
+	ls -A | grep -vE "node_modules$$|.git$$|.idea$$|production$$|static$$|.DS_Store" | xargs -I  {} cp -rf {} ../$(d)/
+	cd ../$(d); \
+	git init; \
+	git remote add template https://git.coding.net/xinshangshangxin/my-express-template.git; \
+	git remote -v
 rsync:
 	cp ./package.json ./production
-	gsed -i 's/"start": "NODE_ENV=.*/"start": "PORT=1337 NODE_ENV=production pm2 start .\/app.js --name template:1337",/g' ./production/package.json
-	rsync --exclude .tmp --exclude node_modules -cazvF -e "ssh -p 22" ./production/  root@139.129.92.153:/root/shang/template
+	gsed -i 's/"start": ".*/"start": "PORT=1337 NODE_ENV=production pm2 start .\/index.js --name template:1337",/g' ./production/package.json
+	rsync --exclude .tmp --exclude node_modules -cazvF -e "ssh -p 22" ./production/  feng@139.129.92.153:/home/feng/shang/template

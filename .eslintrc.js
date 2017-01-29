@@ -4,10 +4,16 @@ module.exports = {
   plugins: [],
   globals: {
     _: false,
-    ApplicationError: false,
     config: false,
+    Errors: false,
+    ExecuteCmdService: false,
+    HookService: false,
     logger: false,
+    MailSendService: false,
+    mKoa: false,
     Promise: false,
+    Webhook: false,
+    UtilService: false,
   },
   rules: {
     'brace-style': ['error', 'stroustrup'],

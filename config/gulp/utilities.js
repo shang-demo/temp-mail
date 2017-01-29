@@ -2,24 +2,28 @@ const chalk = require('chalk');
 const logSymbols = require('log-symbols');
 const notifier = require('node-notifier');
 const through2 = require('through2');
+const path = require('path');
 
-let _filenames = {};
+const _filenames = {};
+const projectPath = path.join(__dirname, '../../');
 
 const svc = {
   eshintReporter(result) {
-    var isNotify = false;
+    let isNotify = false;
     if (result.messages.length) {
       result.messages.forEach((item) => {
-        let location = `${result.filePath.replace(/.*?\/(?=app\/)/, '')}:${item.line}:${item.column}`;
+        let location = `${result.filePath.replace(projectPath, '')}:${item.line}:${item.column}`;
         let ruleId = `${item.ruleId}`;
         let message = `${item.message}`;
 
         if(item.severity === 1) {
-          console.log(`${chalk.yellow(location)}\n${chalk.blue(ruleId)} ${chalk.gray(message)}\n`);
+          console.log(`${chalk.yellow(location)}\n${chalk.blue(ruleId)} ${chalk.gray(message)}`);
         }
         else {
-          console.log(`${chalk.red(location)}\n${chalk.blue(ruleId)} ${chalk.gray(message)}\n`);
+          console.log(`${chalk.red(location)}\n${chalk.blue(ruleId)} ${chalk.gray(message)}`);
         }
+        console.log(chalk.gray(`// eslint-disable-next-line ${ruleId}`));
+        console.log();
 
 
         if(!isNotify) {
