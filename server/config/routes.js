@@ -2,7 +2,7 @@
 module.exports.routes = {
 
   // leancloud不使用云函数和Hook
-  '/1.1/functions/_ops/metadatas': function anonymous(ctx) {
+  '/1.1/functions/_ops/metadatas': function leancloud(ctx) {
     ctx.status = 404;
   },
 
