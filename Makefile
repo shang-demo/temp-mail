@@ -40,8 +40,12 @@ copy:
 	ls -A | grep -vE "node_modules$$|.git$$|.idea$$|production$$|static$$|.DS_Store" | xargs -I  {} cp -rf {} ../$(d)/
 	cd ../$(d); \
 	git init; \
-	git remote add template https://git.coding.net/xinshangshangxin/my-express-template.git; \
+	git remote add template https://git.coding.net/xinshangshangxin/mkoa.git; \
 	git remote -v
+	git add -A
+	git commit -m "init"
+	git fetch template template
+	git merge remotes/template/template
 rsync:
 	cp ./package.json ./production
 	gsed -i 's/"start": ".*/"start": "PORT=1337 NODE_ENV=production pm2 start .\/index.js --name template:1337",/g' ./production/package.json
