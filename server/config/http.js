@@ -7,11 +7,14 @@ const cors = require('kcors');
 module.exports.http = {
   middlewares: [
     function requestLog() {
-      return async (ctx, next) => {
+      return async(ctx, next) => {
         const start = new Date();
         await next();
         const ms = new Date() - start;
         logger.trace(`${ctx.method} ${ctx.url} - ${ctx.status} - ${ms}ms`);
+        if (mKoa.config.log.body) {
+          logger.trace('body: ', ctx.body);
+        }
       };
     },
     function froentEnd() {

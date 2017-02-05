@@ -24,5 +24,10 @@ module.exports = {
       props: false,
     }],
     'prefer-const': ['off'],
+    'space-before-function-paren': ['error', {
+      anonymous: 'always',
+      named: 'never',
+      asyncArrow: 'ignore',
+    }],
   },
 };

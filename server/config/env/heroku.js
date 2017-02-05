@@ -4,6 +4,7 @@ module.exports = {
   log: {
     pretty: true,
     level: 'trace',
+    body: true,
   },
   connections: {
     defaultMongo: {
