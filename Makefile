@@ -42,6 +42,7 @@ copy:
 	git remote add template https://git.coding.net/xinshangshangxin/mkoa.git; \
 	git remote -v; \
 	git fetch template template; \
+	git checkout template; \
 	git checkout -b master; \
 	yarn 
 rsync:
