@@ -138,10 +138,10 @@ function getCommonConfig() {
       dest: path.join(alterableSetting.publicPath, 'styles/fonts'),
     },
     injectHtmlProd: {
-      src: 'index.html',
+      src: '__index__.html',
       opt: {
-        cwd: 'server/views',
-        base: 'server/views',
+        cwd: 'client/',
+        base: 'client',
       },
       cssSource: [                    // 需要引入的cs
         'clinet/styles/bootstrap.min.css',
@@ -187,10 +187,6 @@ function getCommonConfig() {
       dest: path.join(alterableSetting.publicPath, 'js'),
     },
     server: {
-      jsWatch: [
-        'server/**/*.js',
-        '!server/views/**/*',
-      ],
       src: [
         '**/*',
         '!public/**/*',

@@ -402,30 +402,6 @@ gulp.task('injectHtml:prod', () => {
     .pipe(gulp.dest(config.injectHtmlProd.dest));
 });
 
-gulp.task('server', (done) => {
-  if ($.isStatic) {
-    return done();
-  }
-  let f = $.filter(['**/*.js'], { restore: true });
-
-  if (!$.isBuild || !validConfig(config.server)) {
-    return gulp
-      .src(config.server.src, config.server.opt)
-      .pipe(f)
-      .pipe($.jshint(config.jshintPathApp))
-      .pipe($.jshint.reporter(utilities.jshintReporter))
-      .pipe(f.restore);
-  }
-
-  return gulp
-    .src(config.server.src, config.server.opt)
-    .pipe(f)
-    .pipe($.jshint(config.jshintPathApp))
-    .pipe($.jshint.reporter(utilities.jshintReporter))
-    .pipe(f.restore)
-    .pipe(gulp.dest(config.server.dest));
-});
-
 // start watchers
 gulp.task('watchers', (done) => {
   // less
@@ -472,6 +448,58 @@ gulp.task('watchers:sass', () => {
   gulp.watch(config.sass.watcherPath, ['sass']);
 });
 
+gulp.task('server', (done) => {
+  if ($.isStatic) {
+    return done();
+  }
+  let f = $.filter(['**/*.js'], { restore: true });
+
+  if (!$.isBuild || !validConfig(config.server)) {
+    return gulp
+      .src(config.server.src, config.server.opt)
+      .pipe(f)
+      .pipe(eslint())
+      .pipe(eslint.result(result => {
+        utilities.eshintReporter(result);
+      }))
+      .pipe(f.restore);
+  }
+
+  return gulp
+    .src(config.server.src, config.server.opt)
+    .pipe(f)
+    .pipe(eslint())
+    .pipe(eslint.result(result => {
+      utilities.eshintReporter(result);
+    }))
+    .pipe(f.restore)
+    .pipe(gulp.dest(config.server.dest));
+});
+
+gulp.task('buildServer', gulp.series(
+  (done) => {
+    if (!$.isStatic) {
+      copyAttrValue(gulpConfig.alterableSetting, gulpConfig.__alterableSetting__);
+    }
+    getConfig();
+    $.isBuild = true;
+    return done();
+  },
+  'clean',
+  gulp
+    .parallel(
+      'server'
+    ),
+  () => {
+    return gulp
+      .src(config.injectHtmlProd.src, config.injectHtmlProd.opt)
+      .pipe($.rename(function (path) {
+        path.basename = path.basename.substring(2, path.basename.length - 2);
+      }))
+      .pipe(gulp.dest(config.injectHtmlProd.dest));
+  }
+));
+
 gulp.task('build', gulp.series(
   (done) => {
     if (!$.isStatic) {
@@ -495,23 +523,6 @@ gulp.task('build', gulp.series(
       'server'
     ),
   'css',
-  'injectHtml:prod'
-));
-
-gulp.task('buildServer', gulp.series(
-  (done) => {
-    if (!$.isStatic) {
-      copyAttrValue(gulpConfig.alterableSetting, gulpConfig.__alterableSetting__);
-    }
-    getConfig();
-    $.isBuild = true;
-    return done();
-  },
-  'clean',
-  gulp
-    .parallel(
-      'server'
-    ),
   'injectHtml:prod'
 ));
 
@@ -556,10 +567,11 @@ gulp.task('quickStart', gulp.series(
 ));
 
 
+
 const eslint = require('gulp-eslint');
 
 gulp.task('lint', () => gulp
-  .src(config.server.jsWatch)
+  .src(config.server.src, config.server.opt)
   .pipe($.cached('serverJs'))
   .pipe(eslint())
   .pipe(eslint.result(result => {
@@ -572,10 +584,9 @@ gulp.task('lint', () => gulp
 
 gulp.task('wlint', () => {
   gulp.series('lint')();
-  gulp.watch(config.server.jsWatch)
+  gulp.watch(config.server.src, config.server.opt)
     .on('change', (filePath) => {
       // js文件需要 jshint
       gulp.series('lint')();
     })
 });
-

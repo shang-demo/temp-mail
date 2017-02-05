@@ -49,7 +49,7 @@ function pushCoding() {
 	  prettyLog=$3;
 	fi
 
-	gulp prod
+	gulp buildServer
 	echo "cp ./package.json ./production/"
 	cp ./package.json ./production/
 
