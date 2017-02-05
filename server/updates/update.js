@@ -1,4 +1,3 @@
-require('any-promise/register')('bluebird');
 const My = require('../init/index');
 
 const updateFile = process.argv[2];

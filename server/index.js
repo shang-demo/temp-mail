@@ -1,5 +1,3 @@
-require('any-promise/register')('bluebird');
-
 const My = require('./init/index');
 
 const lift = new My({ alias: 'mKoa' })

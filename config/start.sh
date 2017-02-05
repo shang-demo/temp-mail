@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function startServer {
-	node-dev --harmony-async-await app/app.js
+	node-dev --harmony-async-await server/index.js
 }
 
 function startGulp {

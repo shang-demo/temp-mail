@@ -1,9 +1,9 @@
 .PHONY: all test clean static
 d=template2
-dev:
-	@sh config/start.sh
 node-dev:
 	node-dev --harmony-async-await server/index.js
+dev:
+	@sh config/start.sh
 push:
 	git push origin template
 merge:
