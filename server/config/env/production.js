@@ -2,7 +2,13 @@
 
 module.exports = {
   log: {
-    pretty: true,
+    options: {
+      prettyPrint: {
+        dateFormatter: false,
+        pidAndHostname: true,
+        sameLevelColorMessage: false,
+      },
+    },
     level: 'trace',
   },
   connections: {
