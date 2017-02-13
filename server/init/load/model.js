@@ -21,7 +21,7 @@ function getDb(connection, connections) {
   let mongodbUri = getMongodbUri(connections[connection]);
   logger.debug('start connect mongodb: ', mongodbUri);
 
-  dbList[connection] = mongoose.connect(mongodbUri);
+  dbList[connection] = mongoose.createConnection(mongodbUri);
   return dbList[connection];
 }
 
@@ -92,9 +92,14 @@ function define(db, modelName, opt, config) {
     },
   }, config);
 
-  let modelNameSchema = new mongoose.Schema(opt, {
+  let schemaConfig = {
     timestamps: config.timestamps,
-  });
+  };
+  if (config.collection) {
+    schemaConfig.collection = config.collection;
+  }
+
+  let modelNameSchema = new mongoose.Schema(opt, schemaConfig);
 
   // 索引
   if (config.indices) {
@@ -148,7 +153,6 @@ function exposeGlobal(opt) {
 function initModel(modelName, model, connections) {
   model.options = _.assign({
     connection: 'defaultMongo',
-    collection: modelName,
   }, model.options);
 
 

@@ -33,8 +33,8 @@ class My extends EventEmitter {
     }
 
     global.logger = console;
-    global.logger.trace = console.log;
-    global.logger.debug = console.log;
+    global.logger.trace = global.logger.log;
+    global.logger.debug = global.logger.log;
   }
 
   use(middlewareName) {
