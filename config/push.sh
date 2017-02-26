@@ -60,7 +60,7 @@ function pushCoding() {
 	  echo "no ${nodeEnv} Dockerfile, skip"
 	fi
 
-	gsed -i "s/\"start\": \".*/\"start\": \"NODE_ENV=${nodeEnv} PRETTY_LOG=${prettyLog} pm2 start .\/index.js --node-args='--harmony-async-await' --no-daemon\",/g" ./production/package.json
+	gsed -i "s/\"start\": \".*/\"start\": \"NODE_ENV=${nodeEnv} PRETTY_LOG=${prettyLog} pm2 start .\/index.js --no-daemon\",/g" ./production/package.json
 	cd ./production
 	git add -A
 	now=`date +%Y_%m_%d_%H_%M_%S`

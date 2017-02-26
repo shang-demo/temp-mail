@@ -1,7 +1,7 @@
 .PHONY: all test clean static
 d=template2
 node-dev:
-	node-dev --harmony-async-await server/index.js
+	node-dev --respawn server/index.js
 dev:
 	@sh config/start.sh
 push:
@@ -20,7 +20,7 @@ test:
 	fi
 prod:
 	gulp prod
-	NODE_ENV=production PRETTY_LOG=1 node --harmony-async-await production/app.js
+	NODE_ENV=production PRETTY_LOG=1 node production/app.js
 pushHeroku: 
 	cp ./package.json ./production
 	gsed -i 's/"start": ".*/"start": "NODE_ENV=heroku pm2 start .\/index.js --no-daemon",/g' ./production/package.json
