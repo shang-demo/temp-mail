@@ -72,6 +72,7 @@ function lift() {
 
   const port = this.config.port;
   const host = this.config.host;
+  // eslint-disable-next-line no-multi-assign
   const server = this.server = http.createServer(this.app.callback());
 
   server.listen(port, host);

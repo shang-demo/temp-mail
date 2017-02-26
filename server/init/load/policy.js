@@ -7,7 +7,9 @@ function lift() {
   /* eslint-disable import/no-dynamic-require */
   /* eslint max-len: ["error", 150]*/
 
+  // eslint-disable-next-line no-multi-assign
   let policies = this.policies = {};
+  // eslint-disable-next-line no-multi-assign
   let policiesPath = this.config.paths.policies = path.join(this.projectPath, 'policies');
 
   return filePathOneLayer(policiesPath)

@@ -1,9 +1,9 @@
 .PHONY: all test clean static
 d=template2
-node-dev:
-	node-dev --respawn server/index.js
 dev:
 	@sh config/start.sh
+node-dev:
+	node-dev --respawn server/index.js
 push:
 	git push origin template
 merge:

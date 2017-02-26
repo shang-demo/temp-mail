@@ -3,6 +3,7 @@ const filePathOneLayer = require('../utilities/file-path-one-layer');
 
 
 function lift() {
+  // eslint-disable-next-line no-multi-assign
   let controllers = this.controllers = {};
 
   /* eslint-disable global-require */
