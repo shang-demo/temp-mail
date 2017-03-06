@@ -45,6 +45,8 @@ Temporary Items
 # node_modules
 *node_modules*
 
+npm-debug.log
+
 # user
 .git
 .idea

@@ -93,7 +93,7 @@ const svc = {
   },
   promiseWhile: Promise.method((condition, action) => {
     if (!condition()) {
-      return null;
+      return Promise.resolve(null);
     }
     return action().then(svc.promiseWhile.bind(null, condition, action));
   }),

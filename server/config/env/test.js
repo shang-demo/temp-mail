@@ -7,9 +7,9 @@ module.exports = {
   connections: {
     defaultMongo: {
       dbName: 'noDbName',
-      appId: process.env.APP_ID,
-      appKey: process.env.APP_KEY,
-      masterKey: process.env.MASTER_KEY,
+      appId: 'pUyKoyrhtGPjrSyUpAE69PoA-gzGzoHsz',
+      appKey: 'UFfdObfS4O9P1n1s9kBwF6nt',
+      masterKey: 'jlGDxes6GlgO9FFaBOaKLQEj',
     },
   },
   auth: {
