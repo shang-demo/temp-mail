@@ -44,7 +44,7 @@ copy:
 	git fetch template template; \
 	git checkout template; \
 	git checkout -b master; \
-	sed -i 's/"name": ".*/"name": "$(d)",/g' package.json; \
+	gsed -i 's/"name": ".*/"name": "$(d)",/g' package.json; \
 	yarn 
 rsync:
 	cp ./package.json ./production
