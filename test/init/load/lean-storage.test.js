@@ -74,7 +74,10 @@ test('leanStorage#findOne', (t) => {
       webhook2 = _webhook;
       return Webhook
         .findOne({ name: 'test2' }, 'name', {
-          sort: '-updatedAt'
+          sort: {
+            updatedAt: -1,
+            createdAt: 1,
+          }
         });
     })
     .then((_webhook) => {
@@ -87,14 +90,48 @@ test('leanStorage#findOne', (t) => {
 
 test('leanStorage#update', (t) => {
   return Webhook
-    .update({}, {
-      name: 'test3'
+    .update({
+      name: 'test100'
+    }, {
+      name: 'test'
+    }, {
+      upsert: true,
+    })
+    .then(() => {
+      return Webhook.count({ name: 'test' });
+    })
+    .then((nu) => {
+      t.true(nu === 2);
+    })
+    .then(() => {
+      return Webhook
+        .update({
+          name: 'test2'
+        }, {
+          name: 'test'
+        })
+    })
+    .then(() => {
+      return Webhook.count({ name: 'test' });
+    })
+    .then((nu) => {
+      t.true(nu === 3);
+    })
+    .then(() => {
+      return Webhook
+        .update({
+          name: 'test'
+        }, {
+          name: 'test3'
+        }, {
+          multi: true,
+        });
     })
     .then(() => {
       return Webhook.count({ name: 'test3' });
     })
     .then((nu) => {
-      t.true(nu === 2);
+      t.true(nu === 3);
     });
 });
 

@@ -110,9 +110,34 @@ function getModel(request, masterRequest) {
           where: conditions,
           cursor,
         },
-        options,
+        options
       ),
     });
+  }
+
+  function _updateById(modelName, id, doc) {
+    return request({
+      method: 'PUT',
+      uri: `/1.1/classes/${modelName}/${id}`,
+      body: doc,
+    });
+  }
+
+  function transformOrder(sort) {
+    if (_.isObject(sort)) {
+      return _.map(sort, (value, key) => {
+        if (value === -1) {
+          return `-${key}`;
+        }
+        return key;
+      }).join(',');
+    }
+    else if (_.isString(sort)) {
+      return sort;
+    }
+    else {
+      throw new Error(`${sort} not support`);
+    }
   }
 
   return modelName => ({
@@ -123,11 +148,14 @@ function getModel(request, masterRequest) {
           body: doc,
           uri: `/1.1/classes/${modelName}`,
         })
-          .then(resetKey);
+        .then(resetKey);
     },
     find(condition, projection = {}, options = {}) {
-      options.order = options.sort;
-      delete options.sort;
+      if(options.sort) {
+        options.order = transformOrder(options.sort);
+        delete options.sort;
+      }
+
       return request(
         {
           uri: `/1.1/classes/${modelName}`,
@@ -136,32 +164,32 @@ function getModel(request, masterRequest) {
             keys: projection,
           }, options),
         })
-          .then(data => _.map(data.results, resetKey));
+        .then(data => _.map(data.results, resetKey));
     },
     findById(id) {
       return request(
         {
           uri: `/1.1/classes/${modelName}/${id}`,
         })
-          .then(resetKey);
+        .then(resetKey);
     },
     findByIdAndRemove(id) {
       return request({
         method: 'DELETE',
         uri: `/1.1/classes/${modelName}/${id}`,
       })
-          .then(() => ({
-            _id: id,
-          }));
+        .then(() => ({
+          _id: id,
+        }));
     },
     findOne(conditions, projection, options) {
-        // eslint-disable-next-line no-param-reassign
+      // eslint-disable-next-line no-param-reassign
       options = _.assign(options, {
         limit: 1,
       });
 
       return this.find(conditions, projection, options)
-          .then(result => result[0]);
+        .then(result => result[0]);
     },
     count(condition) {
       return request({
@@ -172,51 +200,76 @@ function getModel(request, masterRequest) {
           limit: 0,
         },
       })
-          .then(result => result.count);
+        .then(result => result.count);
     },
     remove(conditions) {
       return this.scan(conditions)
-          .then(results => ({
-            requests: _.map(results, item => ({
-              method: 'DELETE',
-              path: `/1.1/classes/${modelName}/${item._id}`,
-            })),
-          }))
-          .then(body => request({
-            method: 'POST',
-            uri: '/1.1/batch',
-            body,
-          }));
+        .then(results => ({
+          requests: _.map(results, item => ({
+            method: 'DELETE',
+            path: `/1.1/classes/${modelName}/${item._id}`,
+          })),
+        }))
+        .then(body => request({
+          method: 'POST',
+          uri: '/1.1/batch',
+          body,
+        }));
     },
-    update(conditions, doc) {
-      return this.scan(conditions)
-          .then(results => ({
-            requests: _.map(results, item => ({
-              method: 'PUT',
-              path: `/1.1/classes/${modelName}/${item._id}`,
-              body: doc,
-            })),
-          }))
+    update(conditions, doc, options = {}) {
+      // 更新1条
+      if (!options.multi) {
+        return this.findOne(conditions)
+          .then((data) => {
+            if (data) {
+              return _updateById(modelName, data._id, doc);
+            }
+
+            if (options.upsert) {
+              return this.create(doc);
+            }
+          });
+      }
+      // 多条
+      else {
+        return this.scan(conditions)
+          .then((results) => {
+            if (!results || !results.length) {
+              if (options.upsert) {
+                return this.create(doc);
+              }
+              return undefined;
+            }
+
+            return {
+              requests: _.map(results, item => ({
+                method: 'PUT',
+                path: `/1.1/classes/${modelName}/${item._id}`,
+                body: doc,
+              }))
+            };
+          })
           .then(body => request({
             method: 'POST',
             uri: '/1.1/batch',
             body,
           }));
+      }
     },
     scan(conditions, options, cursor) {
       let result = [];
       return UtilService
-          .promiseWhile(
-            () => cursor !== null,
-            () => _scan(modelName, conditions, options, cursor)
-              .then((data) => {
-                // eslint-disable-next-line no-param-reassign
-                cursor = data.cursor || null;
-                result.push(...data.results);
-                return undefined;
-              }),
-          )
-          .then(() => _.map(result, resetKey));
+        .promiseWhile(
+          () => cursor !== null,
+          () => _scan(modelName, conditions, options, cursor)
+            .then((data) => {
+              // eslint-disable-next-line no-param-reassign
+              cursor = data.cursor || null;
+              result.push(...data.results);
+              return undefined;
+            })
+        )
+        .then(() => _.map(result, resetKey));
     },
   });
 }
