@@ -13,7 +13,13 @@ module.exports.http = {
         const ms = new Date() - start;
         logger.trace(`${ctx.method} ${ctx.url} - ${ctx.status} - ${ms}ms`);
         if (mKoa.config.log.body) {
-          logger.trace('body: ', ctx.body);
+          // eslint-disable-next-line no-underscore-dangle
+          if (ctx.body._readableState) {
+            logger.trace('body send buffer');
+          }
+          else {
+            logger.trace('body: ', ctx.body);
+          }
         }
       };
     },
