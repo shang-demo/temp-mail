@@ -14,6 +14,8 @@ function createConnection(config) {
     throw new Error('no appKey found');
   }
 
+  logger.info('appKey: ', appKey, 'appId: ', appId, 'masterKey: ', config.masterKey);
+
 
   let qs = {
     fetchWhenSave: true,
@@ -26,6 +28,7 @@ function createConnection(config) {
   let request = rp.defaults({
     baseUrl: 'https://leancloud.cn:443',
     json: true,
+    timeout: 10 * 1000,
     headers: {
       'X-LC-Id': appId,
       'X-LC-Key': appKey,
@@ -107,7 +110,7 @@ function getModel(request, masterRequest) {
       uri: `/1.1/scan/classes/${modelName}`,
       qs: _.assign(
         {
-          where: conditions,
+          where: JSON.stringify(conditions),
           cursor,
         },
         options
@@ -116,11 +119,19 @@ function getModel(request, masterRequest) {
   }
 
   function _updateById(modelName, id, doc) {
+    delete doc.createdAt;
+    delete doc.updatedAt;
+    delete doc._id;
+    delete doc.objectId;
+
     return request({
       method: 'PUT',
       uri: `/1.1/classes/${modelName}/${id}`,
       body: doc,
-    });
+    })
+      .catch((e) => {
+        return Promise.reject(e);
+      });
   }
 
   function transformOrder(sort) {
@@ -135,103 +146,124 @@ function getModel(request, masterRequest) {
     else if (_.isString(sort)) {
       return sort;
     }
-    else {
-      throw new Error(`${sort} not support`);
-    }
+
+    throw new Error(`${sort} not support`);
   }
 
-  return modelName => ({
-    create(doc) {
-      return request(
-        {
-          method: 'POST',
-          body: doc,
-          uri: `/1.1/classes/${modelName}`,
-        })
-        .then(resetKey);
-    },
-    find(condition, projection = {}, options = {}) {
-      if(options.sort) {
-        options.order = transformOrder(options.sort);
-        delete options.sort;
-      }
+  return (modelName) => {
+    return {
+      create(doc) {
+        return request(
+          {
+            method: 'POST',
+            body: doc,
+            uri: `/1.1/classes/${modelName}`,
+          })
+          .then(resetKey);
+      },
+      find(conditions, projection = '', options = {}) {
+        if (options.sort) {
+          options.order = transformOrder(options.sort);
+          delete options.sort;
+        }
 
-      return request(
-        {
-          uri: `/1.1/classes/${modelName}`,
-          qs: _.assign({
-            where: condition,
-            keys: projection,
-          }, options),
-        })
-        .then(data => _.map(data.results, resetKey));
-    },
-    findById(id) {
-      return request(
-        {
+        return request(
+          {
+            uri: `/1.1/classes/${modelName}`,
+            qs: _.assign({
+              where: JSON.stringify(conditions),
+              keys: projection || undefined,
+            }, options),
+          })
+          .then((data) => {
+            return _.map(data.results, resetKey);
+          });
+      },
+      findById(id) {
+        return request(
+          {
+            uri: `/1.1/classes/${modelName}/${id}`,
+          })
+          .then(resetKey);
+      },
+      findByIdAndRemove(id) {
+        return request({
+          method: 'DELETE',
           uri: `/1.1/classes/${modelName}/${id}`,
         })
-        .then(resetKey);
-    },
-    findByIdAndRemove(id) {
-      return request({
-        method: 'DELETE',
-        uri: `/1.1/classes/${modelName}/${id}`,
-      })
-        .then(() => ({
-          _id: id,
-        }));
-    },
-    findOne(conditions, projection, options) {
-      // eslint-disable-next-line no-param-reassign
-      options = _.assign(options, {
-        limit: 1,
-      });
-
-      return this.find(conditions, projection, options)
-        .then(result => result[0]);
-    },
-    count(condition) {
-      return request({
-        uri: `/1.1/classes/${modelName}`,
-        qs: {
-          where: condition,
-          count: 1,
-          limit: 0,
-        },
-      })
-        .then(result => result.count);
-    },
-    remove(conditions) {
-      return this.scan(conditions)
-        .then(results => ({
-          requests: _.map(results, item => ({
-            method: 'DELETE',
-            path: `/1.1/classes/${modelName}/${item._id}`,
-          })),
-        }))
-        .then(body => request({
-          method: 'POST',
-          uri: '/1.1/batch',
-          body,
-        }));
-    },
-    update(conditions, doc, options = {}) {
-      // 更新1条
-      if (!options.multi) {
-        return this.findOne(conditions)
-          .then((data) => {
-            if (data) {
-              return _updateById(modelName, data._id, doc);
-            }
-
-            if (options.upsert) {
-              return this.create(doc);
-            }
+          .then(() => {
+            return ({
+              _id: id,
+            });
           });
-      }
-      // 多条
-      else {
+      },
+      findOne(conditions, projection, options) {
+        // eslint-disable-next-line no-param-reassign
+        options = _.assign(options, {
+          limit: 1,
+        });
+
+        return this.find(conditions, projection, options)
+          .then((result) => {
+            return result[0];
+          });
+      },
+      count(conditions) {
+        return request({
+          uri: `/1.1/classes/${modelName}`,
+          qs: {
+            where: JSON.stringify(conditions),
+            count: 1,
+            limit: 0,
+          },
+        })
+          .then((result) => {
+            return result.count;
+          });
+      },
+      remove(conditions) {
+        return this.scan(conditions)
+          .then((results) => {
+            return ({
+              requests: _.map(results, (item) => {
+                return ({
+                  method: 'DELETE',
+                  path: `/1.1/classes/${modelName}/${item._id}`,
+                });
+              }),
+            });
+          })
+          .then((body) => {
+            return request({
+              method: 'POST',
+              uri: '/1.1/batch',
+              body,
+            });
+          });
+      },
+      update(conditions, doc, options = {}) {
+        // 更新1条
+        if (!options.multi) {
+          return Promise
+            .try(() => {
+              if (conditions._id) {
+                return conditions._id;
+              }
+              return this.findOne(conditions)
+                .then((data) => {
+                  return data && data._id;
+                });
+            })
+            .then((id) => {
+              if (!id && options.upsert) {
+                return this.create(doc);
+              }
+
+              return _updateById(modelName, id, doc);
+            });
+        }
+        // 多条
+
         return this.scan(conditions)
           .then((results) => {
             if (!results || !results.length) {
@@ -241,37 +273,70 @@ function getModel(request, masterRequest) {
               return undefined;
             }
 
+            delete doc.createdAt;
+            delete doc.updatedAt;
+            delete doc._id;
+            delete doc.objectId;
+
             return {
-              requests: _.map(results, item => ({
-                method: 'PUT',
-                path: `/1.1/classes/${modelName}/${item._id}`,
-                body: doc,
-              }))
+              requests: _.map(results, (item) => {
+                return ({
+                  method: 'PUT',
+                  path: `/1.1/classes/${modelName}/${item._id}`,
+                  body: doc,
+                });
+              }),
             };
           })
-          .then(body => request({
-            method: 'POST',
-            uri: '/1.1/batch',
-            body,
-          }));
-      }
-    },
-    scan(conditions, options, cursor) {
-      let result = [];
-      return UtilService
-        .promiseWhile(
-          () => cursor !== null,
-          () => _scan(modelName, conditions, options, cursor)
-            .then((data) => {
-              // eslint-disable-next-line no-param-reassign
-              cursor = data.cursor || null;
-              result.push(...data.results);
-              return undefined;
-            })
-        )
-        .then(() => _.map(result, resetKey));
-    },
-  });
+          .then((body) => {
+            return request({
+              method: 'POST',
+              uri: '/1.1/batch',
+              body,
+            });
+          });
+      },
+      scan(conditions, options, cursor) {
+        let result = [];
+        return UtilService
+          .promiseWhile(
+            () => {
+              return cursor !== null;
+            },
+            () => {
+              return _scan(modelName, conditions, options, cursor)
+                .then((data) => {
+                  // eslint-disable-next-line no-param-reassign
+                  cursor = data.cursor || null;
+                  result.push(...data.results);
+                  return undefined;
+                });
+            }
+          )
+          .then(() => {
+            return _.map(result, resetKey);
+          });
+      },
+      updateArray(arr) {
+        return request({
+          method: 'POST',
+          uri: '/1.1/batch',
+          body: {
+            requests: _.map(arr, (item) => {
+              delete item.doc.createdAt;
+              delete item.doc.updatedAt;
+
+              return {
+                method: 'PUT',
+                path: `/1.1/classes/${modelName}/${item._id}`,
+                body: item.doc,
+              };
+            }),
+          },
+        });
+      },
+    };
+  };
 }
 
 function exposeGlobal(opt) {
@@ -293,7 +358,9 @@ function lift() {
   /* eslint-disable global-require */
   /* eslint-disable import/no-dynamic-require */
   return filePathOneLayer(modelsPath)
-    .map(file => initModel(file.name.replace(/\.js$/i, ''), require(file.path), this.config.connections))
+    .map((file) => {
+      return initModel(file.name.replace(/\.js$/i, ''), require(file.path), this.config.connections);
+    })
     .map((opt) => {
       this.model[opt.modelName] = opt;
       exposeGlobal(opt);
