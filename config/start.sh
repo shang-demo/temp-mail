@@ -7,7 +7,7 @@ function startServer {
 function startGulp {
 #	reniceNode &
 #	gulp dev
-  gulp wlint
+  gulp
 }
 
 function reniceNode {

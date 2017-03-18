@@ -45,10 +45,10 @@ function getCommonConfig() {
       dest: 'clinet/styles',
     },
     injectHtmlDev: {            // development环境
-      src: 'index.html',
+      src: '__index__.html',
       opt: {
-        cwd: 'server/views',
-        base: 'server/views',
+        cwd: 'client/',
+        base: 'client',
       },
       cssSource: [                    // 需要引入的css
         'clinet/styles/**/*.css',

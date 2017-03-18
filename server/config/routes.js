@@ -19,4 +19,8 @@ module.exports.routes = {
   'put /api/v1/webhook/:id': 'WebhookController.update',
   'delete /api/v1/webhook/:id': 'WebhookController.destroy',
 
+  // index 页面
+  '/*': async function viewHtml(ctx) {
+    await ctx.render('index.html');
+  }
 };
