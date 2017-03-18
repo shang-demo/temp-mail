@@ -31,7 +31,7 @@ module.exports = {
       props: false,
     }],
     'no-underscore-dangle': ['error', {
-      allow: ['_id'],
+      allow: ['_id', '_scan', '_updateById'],
     }],
     'no-use-before-define': ['error', {
       functions: false,

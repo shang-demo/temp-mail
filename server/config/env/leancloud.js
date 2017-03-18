@@ -4,9 +4,13 @@ module.exports = {
     level: 'trace',
     body: true,
   },
+  useLeanStorage: true,
   connections: {
     defaultMongo: {
       dbName: 'noDbName',
+      appId: process.env.APP_ID,
+      appKey: process.env.APP_KEY,
+      masterKey: process.env.MASTER_KEY,
     },
   },
   auth: {
