@@ -174,7 +174,9 @@ function lift() {
   /* eslint-disable global-require */
   /* eslint-disable import/no-dynamic-require */
   return filePathOneLayer(modelsPath)
-    .map(file => initModel(file.name.replace(/\.js$/i, ''), require(file.path), this.config.connections))
+    .map((file) => {
+      return initModel(file.name.replace(/\.js$/i, ''), require(file.path), this.config.connections);
+    })
     .map((opt) => {
       this.model[opt.modelName] = opt;
       exposeGlobal(opt);

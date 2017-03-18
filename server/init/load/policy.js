@@ -33,13 +33,15 @@ function lift() {
 
       let unknownPolicies = [];
 
-      this.controllerActionPolicies = _.mapValues(this.config.controllerActionPolicies, policyNames => _.map(policyNames, (policyName) => {
-        let policy = this.policies[policyName];
-        if (!policy) {
-          unknownPolicies.push(policyName);
-        }
-        return policy;
-      }));
+      this.controllerActionPolicies = _.mapValues(this.config.controllerActionPolicies, (policyNames) => {
+        return _.map(policyNames, (policyName) => {
+          let policy = this.policies[policyName];
+          if (!policy) {
+            unknownPolicies.push(policyName);
+          }
+          return policy;
+        });
+      });
 
       if (unknownPolicies.length) {
         return Promise.reject(new Error(`Unknown policy:${unknownPolicies.join(',')}`));

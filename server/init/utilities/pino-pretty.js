@@ -23,7 +23,9 @@ const standardKeys = [
 function withSpaces(value) {
   let lines = value.split('\n');
   lines.splice(0, 1);
-  return lines.map(item => `    ${item}`).join('\n');
+  return lines.map((item) => {
+    return `    ${item}`;
+  }).join('\n');
 }
 
 function filter(value) {

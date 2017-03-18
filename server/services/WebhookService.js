@@ -80,7 +80,9 @@ const svc = {
       });
   },
   runHooks(data, hooks) {
-    return Promise.map(hooks, hook => svc.runHook(data, hook).reflect());
+    return Promise.map(hooks, (hook) => {
+      return svc.runHook(data, hook).reflect();
+    });
   },
   on(data, conditions, projection, options) {
     // not care the result

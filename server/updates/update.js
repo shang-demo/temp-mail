@@ -20,10 +20,11 @@ function update() {
       logger.info('lifted');
       logger.info('updateFile: ', updateFile);
       Promise
-        .try(() =>
+        .try(() => {
           /* eslint-disable global-require */
           /* eslint-disable import/no-dynamic-require */
-           require(`./${updateFile}`)())
+          return require(`./${updateFile}`)();
+        })
         .then((data) => {
           lift.emit('update-success', data);
         })

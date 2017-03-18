@@ -22,7 +22,9 @@ const ctrl = {
       .then((data) => {
         ctx.body = data;
       })
-      .catch(e => ctx.wrapError(e, new Errors.GetError()));
+      .catch((e) => {
+        return ctx.wrapError(e, new Errors.GetError());
+      });
   },
   create(ctx) {
     let webhook = ctx.request.body;
@@ -32,7 +34,9 @@ const ctrl = {
       .then((data) => {
         ctx.body = data;
       })
-      .catch(e => ctx.wrapError(e, new Errors.CreateError()));
+      .catch((e) => {
+        return ctx.wrapError(e, new Errors.CreateError());
+      });
   },
   update(ctx) {
     let webhook = ctx.request.body;
@@ -43,7 +47,9 @@ const ctrl = {
       .then((data) => {
         ctx.body = data[0];
       })
-      .catch(e => ctx.wrapError(e, new Errors.UpdateError()));
+      .catch((e) => {
+        return ctx.wrapError(e, new Errors.UpdateError());
+      });
   },
   destroy(ctx) {
     let id = ctx.params.id;
@@ -59,14 +65,20 @@ const ctrl = {
         webHook = data;
         return data.remove();
       })
-      .then(() => HookService.on('Webhook:afterDestroy', webHook))
+      .then(() => {
+        return HookService.on('Webhook:afterDestroy', webHook);
+      })
       .then(() => {
         ctx.body = {};
       })
-      .catch(e => ctx.wrapError(e, new Errors.DeleteError()));
+      .catch((e) => {
+        return ctx.wrapError(e, new Errors.DeleteError());
+      });
   },
   queryEvent(ctx) {
-    ctx.body = _.map(HookService.events, value => value);
+    ctx.body = _.map(HookService.events, (value) => {
+      return value;
+    });
   },
 };
 

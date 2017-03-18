@@ -102,13 +102,17 @@ class My extends EventEmitter {
 
 
   listen() {
-    this.promise = this.promise.then(() => this[SymbolCheckMiddleware]('listen'));
+    this.promise = this.promise.then(() => {
+      return this[SymbolCheckMiddleware]('listen');
+    });
     return this;
   }
 
 
   lower() {
-    this.promise = this.promise.then(() => this[SymbolCheckMiddleware]('lower'));
+    this.promise = this.promise.then(() => {
+      return this[SymbolCheckMiddleware]('lower');
+    });
     return this;
   }
 }

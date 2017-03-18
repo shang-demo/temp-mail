@@ -16,12 +16,16 @@ function lift() {
   /* eslint-disable global-require */
   /* eslint-disable import/no-dynamic-require */
   return filePathOneLayer(configPath)
-    .each(file => _.merge(this.config, require(file.path)))
+    .each((file) => {
+      return _.merge(this.config, require(file.path));
+    })
     .then(() => {
       let envPath = path.join(this.config.paths.envConfig, this.environment);
       _.merge(this.config, require(envPath));
     })
-    .then(() => this);
+    .then(() => {
+      return this;
+    });
 }
 
 module.exports = lift;

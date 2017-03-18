@@ -15,7 +15,9 @@ function lift() {
       services[serviceFile.basename] = require(serviceFile.path);
       return undefined;
     })
-    .then(() => _.merge(global, services));
+    .then(() => {
+      return _.merge(global, services);
+    });
 }
 
 module.exports = lift;

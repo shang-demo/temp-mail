@@ -64,8 +64,12 @@ function execCmd(option) {
     }
 
     return Promise
-      .mapSeries(analyseCmd(cmds), item => UtilService.spawnAsync(item).reflect())
-      .then(data => wrapResult(data, email, option))
+      .mapSeries(analyseCmd(cmds), (item) => {
+        return UtilService.spawnAsync(item).reflect();
+      })
+      .then((data) => {
+        return wrapResult(data, email, option);
+      })
       .then((data) => {
         if (isWait) {
           resolve(data);
@@ -114,7 +118,9 @@ function wrapResult(arr, email, option) {
       }
       return null;
     })
-    .then(() => body);
+    .then(() => {
+      return body;
+    });
 }
 
 function analyseCmd(arr) {
@@ -153,7 +159,9 @@ function tryAutoDeploy(body) {
       subject: `开始部署：${name}/${ref}`,
       html: `<p>${new Date().toLocaleString()}</p>`,
     })
-    .then(() => UtilService.execAsync(cmds.join(' && ')))
+    .then(() => {
+      return UtilService.execAsync(cmds.join(' && '));
+    })
     .catch((e) => {
       logger.info(e);
       return MailSendService.sendMail({

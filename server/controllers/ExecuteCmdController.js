@@ -8,7 +8,9 @@ const ctrl = {
         logger.info('execCmd data:    ', data);
         ctx.body = data;
       })
-      .catch(e => ctx.wrapError(e));
+      .catch((e) => {
+        return ctx.wrapError(e);
+      });
   },
   help(ctx) {
     ctx.body = ExecuteCmdService.helpInfo;

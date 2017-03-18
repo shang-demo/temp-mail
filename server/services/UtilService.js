@@ -173,7 +173,9 @@ const svc = {
       .then((data) => {
         ctx.body = data;
       })
-      .catch(e => ctx.wrapError(e, error));
+      .catch((e) => {
+        return ctx.wrapError(e, error);
+      });
   },
 };
 
