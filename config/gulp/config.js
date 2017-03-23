@@ -256,6 +256,17 @@ function getCommonConfig() {
       collapseWhitespace: true,
       removeComments: true,
     },
+    watchRebuildTypings: {
+      src: [
+        'services/**/*',
+        'models/**/*'
+      ],
+      opt: {
+        cwd: 'server/',
+        base: 'server/',
+      },
+      dest: path.join(alterableSetting.publicPath, 'js'),          // libJs在prod环境下才需要 输出, 故dest为 prod环境的dest
+    },
     jshintPath: 'config/gulp/.jshintrc',        // jshintrc 的路径, 相对gulpfile.js
     jshintPathApp: 'config/gulp/.jshintrc_app',  // jshintrc 的路径, 相对gulpfile.js
   };

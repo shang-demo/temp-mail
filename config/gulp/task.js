@@ -1,5 +1,6 @@
 const gulp = require('gulp');
 const utilities = require('./utilities');
+const rebuildTypings = require('../generate-typings').init;
 let gulpConfig = require('./config.js');
 
 let specConfig = null;       // 在环境初始化之后再读取配置
@@ -119,6 +120,30 @@ gulp.task('buildServer', gulp.series(
 ));
 
 
+// start watchers
+gulp.task('watchBuildTypings', function (done) {
+  rebuildTypings();
+  let rebuildTypingsTimer = null;
+
+  gulp.watch(config.watchRebuildTypings.src, config.watchRebuildTypings.opt)
+    // 增加文件需要重新生成依赖
+    .on('add', function () {
+      clearTimeout(rebuildTypingsTimer);
+      rebuildTypingsTimer = setTimeout(function () {
+        rebuildTypings();
+      }, 200);
+    })// 删除文件需要重新生成依赖
+    .on('unlink', function () {
+      clearTimeout(rebuildTypingsTimer);
+      rebuildTypingsTimer = setTimeout(function () {
+        rebuildTypings();
+      }, 200);
+    });
+
+  done();
+});
+
+
 gulp.task('lint', () => gulp
     .src(config.server.src, config.server.opt)
     .pipe($.cached('serverJs'))
@@ -145,5 +170,6 @@ gulp.task('default', gulp.series(
   setDevEnv,
   'clean',
   'injectHtml:dev',
+  'watchBuildTypings',
   'wlint'
 ));
