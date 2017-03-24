@@ -53,6 +53,7 @@ npm-debug.log
 
 server/public/*
 server/views/*
+config/typings/*
 production/
 static/
 deploy/
