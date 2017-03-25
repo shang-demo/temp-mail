@@ -86,8 +86,10 @@ const svc = {
   },
   on(data, conditions, projection, options) {
     // not care the result
-    Webhook
-      .find(conditions, projection, options)
+    Promise
+      .try(() => {
+        return Webhook.find(conditions, projection, options).lean();
+      })
       .then((hooks) => {
         if (!hooks || !hooks.length) {
           return Promise.reject('no hooks');

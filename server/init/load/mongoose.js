@@ -25,11 +25,8 @@ function getDb(connection, connections) {
   return dbList[connection];
 }
 
-function close(done = _.noop) {
-  mongoose.connection.close(() => {
-    logger.debug('Mongoose disconnected');
-    done();
-  });
+function close() {
+  return mongoose.connection.close();
 }
 
 function resolveEnvUrl(config) {
@@ -85,7 +82,6 @@ function define(db, modelName, opt, config) {
     set: {
       toJSON: {
         transform(doc, ret) {
-          // eslint-disable-next-line no-underscore-dangle
           ret.id = ret._id;
         },
       },
@@ -186,5 +182,5 @@ function lift() {
 
 module.exports = {
   lift,
-  lower: Promise.promisify(close),
+  lower: close,
 };

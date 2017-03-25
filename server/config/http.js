@@ -1,4 +1,4 @@
-const bodyparser = require('koa-bodyparser');
+const bodyParser = require('koa-bodyparser');
 const koaStatic = require('koa-static');
 const path = require('path');
 const views = require('koa-views');
@@ -32,6 +32,6 @@ module.exports.http = {
       });
     },
     cors,
-    bodyparser,
+    bodyParser,
   ],
 };

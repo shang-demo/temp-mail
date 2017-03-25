@@ -9,9 +9,9 @@ let redisClient;
 const svc = {
   name: 'redisService',
   lift() {
-    config.env.redis = config.env.redis || {};
+    mKoa.config.env.redis = mKoa.config.env.redis || {};
     let option = {
-      url: `redis://${config.env.redis.ip || '127.0.0.1'}:${config.env.redis.port || '6379'}`,
+      url: `redis://${mKoa.config.env.redis.ip || '127.0.0.1'}:${mKoa.config.env.redis.port || '6379'}`,
     };
 
     logger.info('redis option: ', option);
