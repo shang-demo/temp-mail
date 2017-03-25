@@ -6,8 +6,16 @@ const filePathOneLayer = require('../server/init/utilities/file-path-one-layer')
 const serverPath = path.join(__dirname, '../server');
 const autoGeneratePath = path.join(__dirname, 'typings/auto-generate.d.ts');
 
-/* eslint-disable global-require */
-/* eslint-disable import/no-dynamic-require */
+function ensureTypingDir() {
+  return fs.mkdirAsync(path.join(__dirname, 'typings'))
+    .catch((e) => {
+      if(e.code === 'EEXIST') {
+        return Promise.resolve();
+      }
+
+      return Promise.reject(e);
+    });
+}
 
 function getControllerDeclare() {
   return filePathOneLayer(path.join(serverPath, 'services'))
@@ -54,19 +62,21 @@ function globalLogger() {
 }
 
 function init() {
-  return Promise
-    .all([
-      getGlobal(),
-      globalLogger(),
-      getServiceDeclare(),
-      getControllerDeclare(),
-      getMKoa(),
-    ])
+  return ensureTypingDir()
+    .then(() => {
+      return Promise
+        .all([
+          getGlobal(),
+          globalLogger(),
+          getServiceDeclare(),
+          getControllerDeclare(),
+          getMKoa(),
+        ]);
+    })
     .then((arr) => {
       return fs.writeFileAsync(autoGeneratePath, arr.join('\n'));
     });
 }
-
 
 module.exports = {
   init: init,
