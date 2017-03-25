@@ -1,11 +1,11 @@
-const fs = require('mz/fs');
-const path = require('path');
 const Promise = require('bluebird');
+const fs = Promise.promisifyAll(require('fs'));
+const path = require('path');
 
 module.exports = function filePathOneLayer(modelsPath) {
   return Promise
     .try(() => {
-      return fs.readdir(modelsPath);
+      return fs.readdirAsync(modelsPath);
     })
     .then((fileNames) => {
       return Promise
@@ -17,7 +17,7 @@ module.exports = function filePathOneLayer(modelsPath) {
             return null;
           }
 
-          return fs.stat(filePath)
+          return fs.statAsync(filePath)
             .then((stat) => {
               return {
                 basename: fileName.replace(/\.js/i, ''),
