@@ -4,8 +4,6 @@ dev:
 	@sh config/start.sh
 node-dev:
 	node-dev --respawn server/index.js
-push:
-	git push origin template
 merge:
 	git fetch template template
 	git merge remotes/template/template
@@ -45,6 +43,8 @@ copy:
 	git checkout template; \
 	git checkout -b master; \
 	gsed -i 's/"name": ".*/"name": "$(d)",/g' package.json; \
+	git add -A; \
+	git commit -m "change package name"; \
 	yarn 
 rsync:
 	cp ./package.json ./production
