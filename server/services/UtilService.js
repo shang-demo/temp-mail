@@ -167,7 +167,7 @@ const svc = {
         return result;
       });
   },
-  conditionsQuerySend(Model, ctx, error, opt) {
+  conditionsQuerySend(Model, ctx, error, opt = {}) {
     return svc.conditionsQuery(Model, ctx, opt)
       .then((result) => {
         let totalName = opt.totalName || 'x-total';
