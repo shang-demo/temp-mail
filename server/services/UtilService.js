@@ -110,20 +110,24 @@ const svc = {
 
     return new RegExp(str, 'gi');
   },
-  getCondition(ctx, { condition = {}, projection, options }) {
+  getConditions(ctx, { conditions = {}, projection, options }) {
     let opt = {
-      sort: ctx.query.sort || '-createdAt',
+      sort: ctx.query.sort || { _id: -1 },
     };
 
-    if (ctx.query.page || ctx.query.limit) {
-      let meta = {
-        page: parseInt(ctx.query.page, 10) || 1,
-        limit: parseInt(ctx.query.limit, 10) || 20,
-      };
+    if (ctx.query.skip || ctx.query.page || ctx.query.limit) {
+      opt.limit = parseInt(ctx.query.limit, 10) || 20;
 
-      opt.skip = meta.limit * (meta.page - 1);
-      opt.limit = meta.limit;
+      if (ctx.query.page) {
+        opt.skip = opt.limit * (parseInt(ctx.query.page, 10) - 1);
+      }
+      else if (ctx.query.skip) {
+        opt.skip = parseInt(opt.skip, 10);
+      }
+
+      opt.skip = opt.skip || 0;
     }
+
     opt = _.assign(opt, options);
 
     let query = {};
@@ -141,20 +145,20 @@ const svc = {
       query.createdAt.$lte = new Date(to);
     }
 
-    query = _.assign(query, condition);
+    query = _.assign(query, conditions);
     return {
-      condition: query,
+      conditions: query,
       projection,
       options: opt,
     };
   },
-  conditionQuery(Model, ctx, opt = {}) {
-    let { condition, projection, options } = svc.getCondition(ctx, opt);
+  conditionsQuery(Model, ctx, opt = {}) {
+    let { conditions, projection, options } = svc.getConditions(ctx, opt);
 
     return Promise
       .props({
-        total: Model.count(condition),
-        data: Model.find(condition, projection, options),
+        total: Model.count(conditions),
+        data: Model.find(conditions, projection, options),
       })
       .then((result) => {
         if (opt.filter) {
@@ -163,10 +167,10 @@ const svc = {
         return result;
       });
   },
-  conditionQuerySend(Model, ctx, error, opt) {
-    return svc.conditionQuery(Model, ctx, opt)
+  conditionsQuerySend(Model, ctx, error, opt) {
+    return svc.conditionsQuery(Model, ctx, opt)
       .then((result) => {
-        let totalName = opt.totalName || 'totalItems';
+        let totalName = opt.totalName || 'x-total';
         ctx.set(totalName, result.total);
         return result.data;
       })
