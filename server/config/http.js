@@ -14,11 +14,11 @@ module.exports.http = {
         logger.trace(`${ctx.method} ${ctx.url} - ${ctx.status} - ${ms}ms`);
         if (mKoa.config.log.body) {
           // eslint-disable-next-line no-underscore-dangle
-          if (ctx.body._readableState) {
-            logger.trace('body send buffer');
+          if (ctx.body && ctx.body._readableState) {
+            logger.trace('response send buffer');
           }
           else {
-            logger.trace('body: ', ctx.body);
+            logger.trace('bresponse body: ', ctx.body);
           }
         }
       };
