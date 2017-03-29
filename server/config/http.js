@@ -18,7 +18,7 @@ module.exports.http = {
             logger.trace('response send buffer');
           }
           else {
-            logger.trace('bresponse body: ', ctx.body);
+            logger.trace('response body: ', ctx.body);
           }
         }
       };
