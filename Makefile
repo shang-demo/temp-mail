@@ -1,6 +1,8 @@
 .PHONY: all test clean static
 d=template2
 templateVersion=v2
+gulp:
+	@ gulp
 node-dev:
 	node-dev --respawn src/index.js
 merge:

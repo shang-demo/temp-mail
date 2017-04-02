@@ -1,3 +1,4 @@
+const notifier = require('node-notifier');
 const gulp = require('gulp');
 const utilities = require('./utilities');
 const rebuildTypings = require('../generate-typings').init;
@@ -77,7 +78,7 @@ gulp.task('watchBuildTypings', function (done) {
       }, 200);
     });
 
-  done();
+  return done();
 });
 
 
@@ -111,6 +112,8 @@ gulp.task('wlint', (done) => {
       // js文件需要 jshint
       gulp.series('lint')();
     });
+
+  return done();
 });
 
 
@@ -133,9 +136,34 @@ gulp.task('buildServer', gulp.series(
   'server'
 ));
 
+gulp.task('nodemon', (done) => {
+  let stream = $.nodemon({
+    script: 'src/index.js',
+    ext: 'js',
+    watch: ['src/'],
+    env: {
+      'NODE_ENV': 'development'
+    }
+  });
+
+  stream
+    .on('crash', function() {
+      console.error('Application has crashed!\n');
+      notifier.notify({
+        title:`Application has crashed!`,
+        message: utilities.dateFormat('hh:mm:ss'),
+      });
+    });
+
+  return done();
+});
+
 gulp.task('default', gulp.series(
   setDevEnv,
   'clean',
-  'watchBuildTypings',
-  'wlint'
+  gulp.parallel(
+    'watchBuildTypings',
+    'nodemon',
+    'wlint'
+  )
 ));
