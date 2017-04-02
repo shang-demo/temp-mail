@@ -7,7 +7,7 @@
     "node": ">=7.6.0"
   },
   "scripts": {
-    "start": "node-dev --respawn server/index.js",
+    "start": "gulp",
     "lint": "eslint --fix server/",
     "test": "ava -v -s test/"
   },

@@ -1,3 +1,6 @@
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable no-console */
+
 const notifier = require('node-notifier');
 const gulp = require('gulp');
 const utilities = require('./utilities');
@@ -31,11 +34,11 @@ function copyAttrValue(obj, copyObj) {
   if (!obj || !copyObj) {
     return obj;
   }
-  for(let attr in copyObj) {
-    if ({}.hasOwnProperty.call(copyObj, attr)) {
-      obj[attr] = copyObj[attr];
-    }
-  }
+
+  Object.keys(copyObj).forEach((attr) => {
+    obj[attr] = copyObj[attr];
+  });
+
   return obj;
 }
 
@@ -50,30 +53,31 @@ function setDevEnv(done) {
   return done && done();
 }
 
-function validConfig(config, name) {
-  name = name || 'src';
-  return config[name] && config[name].length;
+function validConfig(setting, name = 'src') {
+  return setting[name] && setting[name].length;
 }
 
-gulp.task('clean', done => $.del(config.clean.src, done));
+gulp.task('clean', (done) => {
+  return $.del(config.clean.src, done);
+});
 
 
 // start watchers
-gulp.task('watchBuildTypings', function (done) {
+gulp.task('watchBuildTypings', (done) => {
   rebuildTypings();
   let rebuildTypingsTimer = null;
 
   gulp.watch(config.watchRebuildTypings.src, config.watchRebuildTypings.opt)
   // 增加文件需要重新生成依赖
-    .on('add', function () {
+    .on('add', () => {
       clearTimeout(rebuildTypingsTimer);
-      rebuildTypingsTimer = setTimeout(function () {
+      rebuildTypingsTimer = setTimeout(() => {
         rebuildTypings();
       }, 200);
     })// 删除文件需要重新生成依赖
-    .on('unlink', function () {
+    .on('unlink', () => {
       clearTimeout(rebuildTypingsTimer);
-      rebuildTypingsTimer = setTimeout(function () {
+      rebuildTypingsTimer = setTimeout(() => {
         rebuildTypings();
       }, 200);
     });
@@ -83,21 +87,21 @@ gulp.task('watchBuildTypings', function (done) {
 
 
 gulp.task('lint', (done) => {
-    if (!validConfig(config.server)) {
-      return done();
-    }
+  if (!validConfig(config.server)) {
+    return done();
+  }
 
-    return gulp
+  return gulp
       .src(config.server.src, config.server.opt)
       .pipe($.cached('serverJs'))
       .pipe($.eslint())
-      .pipe($.eslint.result(result => {
+      .pipe($.eslint.result((result) => {
         utilities.eshintReporter(result);
       }))
-      .pipe($.remember('serverJs'))
+      .pipe($.remember('serverJs'));
     // .pipe($.eslint.format())
     // .pipe($.eslint.failAfterError())
-  }
+}
 );
 
 gulp.task('wlint', (done) => {
@@ -124,7 +128,7 @@ gulp.task('server', () => {
     .src(config.server.src, config.server.opt)
     .pipe(f)
     .pipe($.eslint())
-    .pipe($.eslint.result(result => {
+    .pipe($.eslint.result((result) => {
       utilities.eshintReporter(result);
     }))
     .pipe(f.restore)
@@ -143,7 +147,7 @@ gulp.task('nodemon', (done) => {
     crash() {
       console.error('Application has crashed!\n');
       notifier.notify({
-        title: `Application has crashed!`,
+        title: 'Application has crashed!',
         message: utilities.dateFormat('hh:mm:ss'),
       });
     },
