@@ -1,9 +1,11 @@
 function initProject() {
 	templateVersion=v2
-	cpDir="../../template2"
+	projectName=template2;
+	cpDir="../../${projectName}"
 
 	if [ -n "$1" ]
 	then
+		projectName=$1
 		cpDir="../../$1"
 	  echo "copy to ${cpDir}"
 	fi
@@ -22,7 +24,7 @@ function initProject() {
 	git fetch template ${templateVersion}; 
 	git checkout ${templateVersion}; 
 	git checkout -b master; 
-	gsed -i 's/"name": ".*/"name": "$(d)",/g' package.json; 
+	gsed -i "s/\"name\": \".*/\"name\": \"${projectName}\",/g" package.json; 
 	rm config/copy.sh
 	git add -A; 
 	git commit -m "init project"; 
