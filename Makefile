@@ -45,7 +45,7 @@ copy:
 	gsed -i 's/"name": ".*/"name": "$(d)",/g' package.json; \
 	git add -A; \
 	git commit -m "change package name"; \
-	yarn 
+	yarnpkg 
 rsync:
 	cp ./package.json ./production
 	gsed -i 's/"start": ".*/"start": "PORT=1337 NODE_ENV=production pm2 start .\/index.js --name template:1337",/g' ./production/package.json
