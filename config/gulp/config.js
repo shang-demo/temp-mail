@@ -45,6 +45,20 @@ function getCommonConfig() {
       },
       dest: path.join(alterableSetting.publicPath, 'js'),
     },
+    nodemon: {
+      config: {
+        script: 'src/index.js',
+        ext: 'js',
+        watch: ['src/'],
+        env: {
+          'NODE_ENV': 'development'
+        }
+      },
+      event: {
+        crash: true,
+        start: true,
+      }
+    }
   };
 }
 

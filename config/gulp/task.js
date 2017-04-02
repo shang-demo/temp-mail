@@ -137,23 +137,37 @@ gulp.task('buildServer', gulp.series(
 ));
 
 gulp.task('nodemon', (done) => {
-  let stream = $.nodemon({
-    script: 'src/index.js',
-    ext: 'js',
-    watch: ['src/'],
-    env: {
-      'NODE_ENV': 'development'
-    }
-  });
+  let stream = $.nodemon(config.nodemon.config);
 
-  stream
-    .on('crash', function() {
+  let defaultEvent = {
+    crash() {
       console.error('Application has crashed!\n');
       notifier.notify({
-        title:`Application has crashed!`,
+        title: `Application has crashed!`,
         message: utilities.dateFormat('hh:mm:ss'),
       });
-    });
+    },
+    start() {
+      utilities
+        .spawnDefer({
+          cmd: 'clear',
+          arg: [],
+        });
+    },
+  };
+
+  Object.keys(config.nodemon.event).forEach((eventName) => {
+    let event = config.nodemon.event[eventName];
+    if (typeof eventName === 'function') {
+      stream.on(eventName, event);
+    }
+    else if (event === true && defaultEvent[eventName]) {
+      stream.on(eventName, defaultEvent[eventName]);
+    }
+    else {
+      console.warn(`not support for ${eventName}`);
+    }
+  });
 
   return done();
 });
