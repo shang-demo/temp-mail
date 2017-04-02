@@ -1,12 +1,11 @@
 .PHONY: all test clean static
 d=template2
-dev:
-	@sh config/start.sh
+templateVersion=v2
 node-dev:
 	node-dev --respawn server/index.js
 merge:
-	git fetch template template
-	git merge remotes/template/template
+	git fetch template $(templateVersion)
+	git merge remotes/template/$(templateVersion)
 test:
 	@ if [ -n "$(g)" ]; \
 	then \
@@ -23,30 +22,16 @@ pushHeroku:
 	cp ./package.json ./production
 	gsed -i 's/"start": ".*/"start": "NODE_ENV=heroku pm2 start .\/index.js --no-daemon",/g' ./production/package.json
 	cd ./production && git add -A && git commit -m "auto" && git push heroku master && heroku logs --tail
+dev:
+	@ sh ./config/start.sh
 pushProd:
 	@ sh ./config/push.sh
+copy:
+	@ sh ./config/copy.sh $(d)
 static:
 	gulp static
 	cd static && hs
-copy:
-	@ if [ -e ../$(d)/ ]; \
-	then \
-		echo "../$(d)/ 目录存在!!"; \
-		exit 1; \
-	fi
-	mkdir -p ../$(d)/
-	cd ../$(d); \
-	git init; \
-	git remote add template https://git.coding.net/xinshangshangxin/mkoa.git; \
-	git remote -v; \
-	git fetch template template; \
-	git checkout template; \
-	git checkout -b master; \
-	gsed -i 's/"name": ".*/"name": "$(d)",/g' package.json; \
-	git add -A; \
-	git commit -m "change package name"; \
-	yarnpkg 
 rsync:
 	cp ./package.json ./production
 	gsed -i 's/"start": ".*/"start": "PORT=1337 NODE_ENV=production pm2 start .\/index.js --name template:1337",/g' ./production/package.json
-	rsync --exclude .tmp --exclude node_modules -cazvF -e "ssh -p 22" ./production/  feng@139.129.92.153:/home/feng/shang/template
+	rsync --exclude .tmp --exclude node_modules -cazvF -e "ssh -p 22" ./production/  feng@139.129.92.153:/home/feng/shang/template/$(templateVersion)
