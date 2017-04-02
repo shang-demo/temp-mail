@@ -1,9 +1,9 @@
 const Promise = require('bluebird');
 const fs = Promise.promisifyAll(require('fs'));
 const path = require('path');
-const filePathOneLayer = require('../server/init/utilities/file-path-one-layer');
+const filePathOneLayer = require('../src/init/utilities/file-path-one-layer');
 
-const serverPath = path.join(__dirname, '../server');
+const serverPath = path.join(__dirname, '../src');
 const autoGeneratePath = path.join(__dirname, 'typings/auto-generate.d.ts');
 
 function ensureTypingDir() {

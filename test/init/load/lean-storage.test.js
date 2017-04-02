@@ -2,8 +2,8 @@ process.env.NODE_ENV = 'test';
 
 const _ = require('lodash');
 const { test } =  require('ava');
-const leanStorage = require('../../../server/init/load/lean-storage');
-const My = require('../../../server/init/index');
+const leanStorage = require('../../../src/init/load/lean-storage');
+const My = require('../../../src/init/index');
 
 let lift;
 let webhook;

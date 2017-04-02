@@ -40,13 +40,11 @@ function copyAttrValue(obj, copyObj) {
 
 function getConfig() {
   config = gulpConfig.getCommonConfig();
-  specConfig = gulpConfig.getSpecConfig();
   $.config = config;
-  $.specConfig = specConfig;
 }
 
 function setDevEnv(done) {
-  gulpConfig.alterableSetting.publicPath = 'app/public';
+  gulpConfig.alterableSetting.publicPath = 'src/public';
   getConfig();
   return done && done();
 }
@@ -58,67 +56,6 @@ function validConfig(config, name) {
 
 gulp.task('clean', done => $.del(config.clean.src, done));
 
-gulp.task('server', (done) => {
-  if ($.isStatic) {
-    return done();
-  }
-  let f = $.filter(['**/*.js'], { restore: true });
-
-  if (!$.isBuild || !validConfig(config.server)) {
-    return gulp
-      .src(config.server.src, config.server.opt)
-      .pipe(f)
-      .pipe($.eslint())
-      .pipe($.eslint.result(result => {
-        utilities.eshintReporter(result);
-      }))
-      .pipe(f.restore);
-  }
-
-  return gulp
-    .src(config.server.src, config.server.opt)
-    .pipe(f)
-    .pipe($.eslint())
-    .pipe($.eslint.result(result => {
-      utilities.eshintReporter(result);
-    }))
-    .pipe(f.restore)
-    .pipe(gulp.dest(config.server.dest));
-});
-
-gulp.task('injectHtml:dev', () => {
-  return gulp
-    .src(config.injectHtmlDev.src, config.injectHtmlDev.opt)
-    .pipe($.rename(function (path) {
-      path.basename = path.basename.substring(2, path.basename.length - 2);
-    }))
-    .pipe(gulp.dest(config.injectHtmlDev.dest));
-});
-
-gulp.task('buildServer', gulp.series(
-  (done) => {
-    if (!$.isStatic) {
-      copyAttrValue(gulpConfig.alterableSetting, gulpConfig.__alterableSetting__);
-    }
-    getConfig();
-    $.isBuild = true;
-    return done();
-  },
-  'clean',
-  gulp
-    .parallel(
-      'server'
-    ),
-  () => {
-    return gulp
-      .src(config.injectHtmlProd.src, config.injectHtmlProd.opt)
-      .pipe($.rename(function (path) {
-        path.basename = path.basename.substring(2, path.basename.length - 2);
-      }))
-      .pipe(gulp.dest(config.injectHtmlProd.dest));
-  }
-));
-
 
 // start watchers
 gulp.task('watchBuildTypings', function (done) {
@@ -126,7 +63,7 @@ gulp.task('watchBuildTypings', function (done) {
   let rebuildTypingsTimer = null;
 
   gulp.watch(config.watchRebuildTypings.src, config.watchRebuildTypings.opt)
-    // 增加文件需要重新生成依赖
+  // 增加文件需要重新生成依赖
     .on('add', function () {
       clearTimeout(rebuildTypingsTimer);
       rebuildTypingsTimer = setTimeout(function () {
@@ -144,32 +81,61 @@ gulp.task('watchBuildTypings', function (done) {
 });
 
 
-gulp.task('lint', () => gulp
+gulp.task('lint', (done) => {
+    if (!validConfig(config.server)) {
+      return done();
+    }
+
+    return gulp
+      .src(config.server.src, config.server.opt)
+      .pipe($.cached('serverJs'))
+      .pipe($.eslint())
+      .pipe($.eslint.result(result => {
+        utilities.eshintReporter(result);
+      }))
+      .pipe($.remember('serverJs'))
+    // .pipe($.eslint.format())
+    // .pipe($.eslint.failAfterError())
+  }
+);
+
+gulp.task('wlint', (done) => {
+  if (!validConfig(config.server)) {
+    return done();
+  }
+
+  gulp.series('lint')();
+  gulp.watch(config.server.src, config.server.opt)
+    .on('change', (filePath) => {
+      console.info(`${filePath} do eslint`);
+      // js文件需要 jshint
+      gulp.series('lint')();
+    });
+});
+
+
+gulp.task('server', () => {
+  let f = $.filter(['**/*.js'], { restore: true });
+
+  return gulp
     .src(config.server.src, config.server.opt)
-    .pipe($.cached('serverJs'))
+    .pipe(f)
     .pipe($.eslint())
     .pipe($.eslint.result(result => {
       utilities.eshintReporter(result);
     }))
-    .pipe($.remember('serverJs'))
-  // .pipe($.eslint.format())
-  // .pipe($.eslint.failAfterError())
-);
-
-gulp.task('wlint', () => {
-  gulp.series('lint')();
-  gulp.watch(config.server.src, config.server.opt)
-    .on('change', (filePath) => {
-      // js文件需要 jshint
-      gulp.series('lint')();
-    })
+    .pipe(f.restore)
+    .pipe(gulp.dest(config.server.dest));
 });
 
+gulp.task('buildServer', gulp.series(
+  'clean',
+  'server'
+));
 
 gulp.task('default', gulp.series(
   setDevEnv,
   'clean',
-  'injectHtml:dev',
   'watchBuildTypings',
   'wlint'
 ));

@@ -2,7 +2,7 @@
 d=template2
 templateVersion=v2
 node-dev:
-	node-dev --respawn server/index.js
+	node-dev --respawn src/index.js
 merge:
 	git fetch template $(templateVersion)
 	git merge remotes/template/$(templateVersion)

@@ -52,8 +52,8 @@ npm-debug.log
 .idea
 
 config/typings/auto-generate.d.ts
-server/public/*
-server/views/*
+src/public/*
+src/views/*
 production/
 static/
 deploy/
