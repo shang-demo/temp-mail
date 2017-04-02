@@ -1,21 +1,24 @@
 const ctrl = {
-  query(ctx) {
+  async query(ctx) {
     let opt = {};
 
     let search = ctx.query.search;
     if (search) {
       opt.condition = {
         $or: [{
-          name: UtilService.escapeRegExp(search),
+          name: {
+            $reg: UtilService.escapeRegExp(search),
+            $options: 'gi',
+          },
         }],
       };
     }
 
     /* eslint max-len: ["error", 120]*/
-    return UtilService.conditionQuerySend(Webhook, ctx, new Errors.QueryError(), opt);
+    return UtilService.conditionsQuerySend(Webhook, ctx, new Errors.QueryError(), opt);
   },
-  get(ctx) {
-    Webhook
+  async get(ctx) {
+    return Webhook
       .findOne({
         _id: ctx.params.id,
       })
@@ -26,10 +29,10 @@ const ctrl = {
         return ctx.wrapError(e, new Errors.GetError());
       });
   },
-  create(ctx) {
+  async create(ctx) {
     let webhook = ctx.request.body;
 
-    Webhook
+    return Webhook
       .create(webhook)
       .then((data) => {
         ctx.body = data;
@@ -38,10 +41,10 @@ const ctrl = {
         return ctx.wrapError(e, new Errors.CreateError());
       });
   },
-  update(ctx) {
+  async update(ctx) {
     let webhook = ctx.request.body;
 
-    Webhook.update({
+    return Webhook.update({
       _id: webhook.id,
     }, webhook)
       .then((data) => {
@@ -51,10 +54,10 @@ const ctrl = {
         return ctx.wrapError(e, new Errors.UpdateError());
       });
   },
-  destroy(ctx) {
+  async destroy(ctx) {
     let id = ctx.params.id;
     let webHook;
-    Webhook
+    return Webhook
       .findOne({
         _id: id,
       })
@@ -75,7 +78,7 @@ const ctrl = {
         return ctx.wrapError(e, new Errors.DeleteError());
       });
   },
-  queryEvent(ctx) {
+  async queryEvent(ctx) {
     ctx.body = _.map(HookService.events, (value) => {
       return value;
     });

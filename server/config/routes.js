@@ -1,8 +1,16 @@
-
 module.exports.routes = {
 
   // leancloud不使用云函数和Hook
   '/1.1/functions/_ops/metadatas': function leancloud(ctx) {
+    ctx.status = 404;
+  },
+
+  // leancloud heartbeat
+  '/__engine/*': function leancloud(ctx) {
+    ctx.status = 200;
+  },
+
+  '/favicon.ico': function faviconIco(ctx) {
     ctx.status = 404;
   },
 
@@ -19,8 +27,8 @@ module.exports.routes = {
   'put /api/v1/webhook/:id': 'WebhookController.update',
   'delete /api/v1/webhook/:id': 'WebhookController.destroy',
 
-  // index 页面
+  // 未找到
   '/*': async function viewHtml(ctx) {
-    await ctx.render('index.html');
-  }
+    ctx.status = 404;
+  },
 };

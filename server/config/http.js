@@ -1,35 +1,27 @@
 const bodyParser = require('koa-bodyparser');
-const koaStatic = require('koa-static');
-const path = require('path');
-const views = require('koa-views');
 const cors = require('kcors');
 
 module.exports.http = {
   middlewares: [
     function requestLog() {
-      return async(ctx, next) => {
+      return async (ctx, next) => {
         const start = new Date();
         await next();
-        const ms = new Date() - start;
-        logger.trace(`${ctx.method} ${ctx.url} - ${ctx.status} - ${ms}ms`);
+
+        let ms = new Date() - start;
+        let arr = [`${ctx.method} ${ctx.url} - ${ctx.status} - ${ms}ms`];
+
         if (mKoa.config.log.body) {
           // eslint-disable-next-line no-underscore-dangle
           if (ctx.body && ctx.body._readableState) {
-            logger.trace('response send buffer');
+            arr.push('response send buffer');
           }
           else {
-            logger.trace('response body: ', ctx.body);
+            arr.push(ctx.body || '');
           }
         }
+        logger.trace(...arr);
       };
-    },
-    function froentEnd() {
-      return koaStatic(mKoa.config.paths.public || path.join(__dirname, '../../client'));
-    },
-    function indexViews() {
-      return views(path.join(__dirname, '../views'), {
-        extension: 'html',
-      });
     },
     cors,
     bodyParser,
