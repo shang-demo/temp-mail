@@ -26,7 +26,7 @@ function getDb(connection, connections) {
 }
 
 function close() {
-  return mongoose.connection.close();
+  return mongoose.disconnect();
 }
 
 function resolveEnvUrl(config) {
