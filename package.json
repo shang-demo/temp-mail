@@ -23,7 +23,7 @@
     "lodash": "^4.17.4",
     "mongoose": "^4.9.2",
     "nodemailer": "^3.1.8",
-    "pino": "shang-packages/pino",
+    "pino": "shang-package/pino",
     "pm2": "^2.4.3",
     "redis": "^2.7.1",
     "request": "^2.81.0",
