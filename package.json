@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "gulp",
-    "lint": "eslint --fix server/",
+    "lint": "./node_modules/.bin/eslint --fix src/",
     "test": "ava -v -s test/"
   },
   "dependencies": {
