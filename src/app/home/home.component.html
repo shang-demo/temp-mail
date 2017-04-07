@@ -1,3 +1,13 @@
 <div>
+  <button md-raised-button>hash={{location.hash}}</button>
+  <button  md-raised-button [routerLink]=" [''] "
+          routerLinkActive="active"
+           [routerLinkActiveOptions]="{exact: true}"
+  >index</button>
+
+  <button  md-raised-button [routerLink]=" ['/home'] "
+           routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+    home
+  </button>
 
 </div>

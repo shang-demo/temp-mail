@@ -16,6 +16,9 @@ import { Component, OnInit } from '@angular/core';
 export class HomeComponent implements OnInit {
   // TypeScript public modifiers
   // constructor() {}
+
+  public location = window.location;
+
   public ngOnInit() {
     console.log('hello `Home` component');
     // this.title.getData().subscribe(data => this.data = data);

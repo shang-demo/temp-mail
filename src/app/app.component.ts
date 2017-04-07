@@ -1,8 +1,13 @@
 /*
  * Angular 2 decorators and services
  */
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { AppState } from './app.service';
+import { SlimLoadingBarService } from 'ng2-slim-loading-bar';
+import {
+  NavigationCancel, NavigationEnd,
+  NavigationError, NavigationStart, Router,
+}from '@angular/router';
 
 /*
  * App Component
@@ -12,32 +17,41 @@ import { AppState } from './app.service';
   selector: 'app',
   encapsulation: ViewEncapsulation.None,
   styleUrls: [
-    './app.component.scss'
+    './app.component.scss',
   ],
-  template: `
-    <nav>
-      <a [routerLink]=" ['./'] "
-         routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-        Index
-      </a>
-      <a [routerLink]=" ['./home'] "
-         routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-        Home
-      </a>
-    </nav>
-
-    <main>
-      <router-outlet></router-outlet>
-    </main>
-  `
+  templateUrl: './app.component.html',
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
-  constructor(public appState: AppState) {
+  private sub: any;
+
+  constructor(public appState: AppState,
+              private slimLoader: SlimLoadingBarService,
+              private router: Router) {
+
+    this.sub = this.router.events
+      .subscribe(
+        (event) => {
+          if (event instanceof NavigationStart) {
+            this.slimLoader.start();
+          } else if (event instanceof NavigationEnd ||
+            event instanceof NavigationCancel ||
+            event instanceof NavigationError) {
+            this.slimLoader.complete();
+          }
+        },
+        (error: any) => {
+          console.warn(error);
+          this.slimLoader.complete();
+        });
   }
 
   public ngOnInit() {
     console.log('Initial App State', this.appState.state);
+  }
+
+  public ngOnDestroy(): any {
+    this.sub.unsubscribe();
   }
 }
 
