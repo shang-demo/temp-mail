@@ -79,6 +79,10 @@ function push() {
 
   if [ ${env} = "deploy" ]
   then
+    #  gitlab pages need
+    cp config/gitlab-ci-template.yml dist/.gitlab-ci.yml
+    gsed -i "s|__branch_name__|${pushBranch}|g" dist/.gitlab-ci.yml
+    
     git add -A
     now=`date +%Y_%m_%d_%H_%M_%S`
     git commit -m "${now}" || echo ""
