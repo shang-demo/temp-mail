@@ -1,5 +1,30 @@
+#!/usr/bin/env bash
+
+
+function getConfig() {
+  configName=${1};
+  if [ -z "${configName}" ]
+  then
+    echo "no config name found";
+    # 退出不再执行
+    kill -s TERM ${TOP_PID}
+    exit 1;
+  fi
+
+  value=`cat package.json | jq -r ".${configName}"`;
+  if [ -z "${value}" -o ${value} = "null" ]
+  then
+    value=${2}
+  fi
+
+  echo ${value};
+}
+
+
 function initProject() {
-	templateVersion=v2
+	templateVersion=$(getConfig "push.dev.branch")
+	templateRemote=$(getConfig "push.dev.url")
+
 	projectName=template2;
 	cpDir="../../${projectName}"
 
@@ -19,17 +44,34 @@ function initProject() {
 	mkdir -p ${cpDir}; 
 	cd ${cpDir}; 
 	git init; 
-	git remote add template https://git.coding.net/xinshangshangxin/clientTemplate.git; 
+	git remote add template ${templateRemote};
 	git remote -v; 
-	git fetch template ${templateVersion}; 
+	git fetch template ${templateVersion};
 	git checkout ${templateVersion}; 
 	git checkout -b master; 
-	gsed -i "s/\"name\": \".*/\"name\": \"${projectName}\",/g" package.json; 
+
+  # change merge branch
+	gsed -i "s/__template_branch__/${templateRemote}/g" Makefile;
+  # change project name and push remote
+	cat package.json | jq ".name=\"${projectName}\" | .push.dev.url=\"\" | .push.dev.remote=\"origin\" | .push.dev.branch=\"\" | .push.deploy.url=\"\""
 	rm config/copy.sh
+
 	git add -A; 
 	git commit -m "init project"; 
 	yarnpkg
 }
 
-initProject $*
+function checkDependence() {
+	if ! command -v ${1} > /dev/null 2>&1;then
+    echo "no ${1} found, please use: \nbrew install ${1}"
+    exit 1;
+	fi 
+}
 
+function checkDependencies() {
+	checkDependence gsed
+	checkDependence jq
+}
+
+checkDependencies
+initProject $*

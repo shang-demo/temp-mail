@@ -165,5 +165,17 @@
   "engines": {
     "node": ">= 4.2.1",
     "npm": ">= 3"
+  },
+  "push": {
+    "dev": {
+      "url": "git@github.com:shang-demo/client-template.git",
+      "remote": "template",
+      "branch": "v2"
+    },
+    "deploy": {
+      "url": "git@github.com:shang-demo/client-template.git",
+      "remote": "prod",
+      "branch": "__package_name__"
+    }
   }
 }

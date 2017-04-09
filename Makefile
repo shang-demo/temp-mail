@@ -1,15 +1,12 @@
 .PHONY: push start pushProd copy
 start:
 	npm run start:hmr
+merge:
+	git fetch template __template_branch__
+	git merge remotes/template/__template_branch__
 push:
-	echo "you need define"
-pushProd:
-	npm run build:aot:prod; \
-	cd dist; \
-	git init; \
-	git remote add coding git@git.coding.net:xinshangshangxin/site-crawler.git; \
-	git add -A; \
-	git commit -m "auto"; \
-	git push coding master:coding-pages -f
+	@ sh config/push.sh
+deploy:
+	@ sh config/push.sh deploy
 copy:
 	@ sh config/copy.sh $(d)
