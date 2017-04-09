@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+trap "exit 1" TERM
+export TOP_PID=$$
 
 function getConfig() {
   configName=${1};
@@ -20,51 +22,56 @@ function getConfig() {
   echo ${value};
 }
 
-
 function initProject() {
 	templateVersion=$(getConfig "push.dev.branch")
 	templateRemote=$(getConfig "push.dev.url")
-
-	projectName=template2;
-	cpDir="../../${projectName}"
 
 	if [ -n "$1" ]
 	then
 		projectName=$1
 		cpDir="../../$1"
 	  echo "copy to ${cpDir}"
+	else
+	  echo "need param 'd' to set copy dir"
+
+	  kill -s TERM ${TOP_PID}
+    exit 1
 	fi
 
 	if [ -e ${cpDir} ]
-	then 
-		echo "${cpDir} 目录存在!!"; 
-		exit 1; 
+	then
+		echo "${cpDir} 目录存在!!";
+
+		kill -s TERM ${TOP_PID}
+    exit 1
 	fi
 
-	mkdir -p ${cpDir}; 
+	mkdir -p ${cpDir};
 	cd ${cpDir}; 
-	git init; 
+	git init;
 	git remote add template ${templateRemote};
-	git remote -v; 
+	git remote -v;
 	git fetch template ${templateVersion};
-	git checkout ${templateVersion}; 
-	git checkout -b master; 
+	git checkout ${templateVersion};
+	git checkout -b master;
 
   # change merge branch
-	gsed -i "s/__template_branch__/${templateRemote}/g" Makefile;
+	gsed -i "s|__template_branch__|${templateVersion}|g" Makefile
   # change project name and push remote
 	cat package.json | jq ".name=\"${projectName}\" | .push.dev.url=\"\" | .push.dev.remote=\"origin\" | .push.dev.branch=\"\" | .push.deploy.url=\"\""
 	rm config/copy.sh
 
-	git add -A; 
-	git commit -m "init project"; 
+	git add -A;
+	git commit -m "init project";
 	yarnpkg
 }
 
 function checkDependence() {
 	if ! command -v ${1} > /dev/null 2>&1;then
     echo "no ${1} found, please use: \nbrew install ${1}"
-    exit 1;
+
+    kill -s TERM ${TOP_PID}
+    exit 1
 	fi 
 }
 
