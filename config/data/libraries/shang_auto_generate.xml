@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="shang-auto-generate" type="javaScript">
+    <properties>
+      <sourceFilesUrls>
+        <item url="file://$PROJECT_DIR$/config/typings/shang-auto-generate.d.ts" />
+      </sourceFilesUrls>
+    </properties>
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/config/typings/shang-auto-generate.d.ts" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

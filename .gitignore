@@ -51,7 +51,7 @@ npm-debug.log
 .git
 .idea
 
-config/typings/auto-generate.d.ts
+config/typings/shang-auto-generate.d.ts
 src/public/*
 src/views/*
 production/

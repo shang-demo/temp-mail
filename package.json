@@ -9,7 +9,8 @@
   "scripts": {
     "start": "gulp",
     "lint": "./node_modules/.bin/eslint --fix src/",
-    "test": "ava -v -s test/"
+    "test": "ava -v -s test/",
+    "typings": "node config/generate-typings init"
   },
   "dependencies": {
     "bluebird": "^3.5.0",
