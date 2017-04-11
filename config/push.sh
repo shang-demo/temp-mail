@@ -1,73 +1,141 @@
 #!/usr/bin/env bash
 
-nodeEnv="leancloud";
-prettyLog="1";
-remoteOrigin="git@production.coding.net:shangxin/Production.git"
+trap "exit 1" TERM
+export TOP_PID=$$
 
 projectDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
-
-projectName=`cat ${projectDir}"/package.json" | grep -E "\"name\"(.*?)" | sed "s/\"name\": \"\([^\"]*\)\",/\1/g" | xargs -I {} echo {}`
-echo "projectName: "${projectName}
 
 function resetDir() {
   cd ${projectDir}
 }
 
-function initRemote() {
-  resetDir
-  mkdir -p ./production
-  cd ./production
-  localRepoDir=`git remote -v | grep -E "production\s+${remoteOrigin}\s+\(push\)"`
-  if [ -z "$localRepoDir" ]
+function getConfig() {
+  configName=${1};
+  if [ -z "${configName}" ]
   then
-    git init
-    git remote add production ${remoteOrigin}
-  else
-    echo ${localRepoDir}
+    echo "no config name found";
+    # 退出不再执行
+    kill -s TERM ${TOP_PID}
+    exit 1;
   fi
-  resetDir
+
+  value=`cat package.json | jq -r ".${configName}"`;
+  if [ -z "${value}" -o ${value} = "null" ]
+  then
+    value=${2}
+  fi
+
+  echo ${value};
 }
 
-function pushCoding() {
+function currentBranch() {
+  git rev-parse --abbrev-ref HEAD
+}
+
+function pushDeploy() {
   resetDir
-  initRemote
-	if [ -n "$1" ]
-	then
-	  echo "set projectName to $1";
-	  projectName=$1;
-	fi
 
-	if [ -n "$2" ]
-	then
-		echo "set NODE_ENV to $2";
-	  nodeEnv=$2;
-	fi
+  nodeEnv=${1}
 
-	if [ -n "$3" ]
-	then
-		echo "set PRETTY_LOG to $3";
-	  prettyLog=$3;
-	fi
-
-	gulp buildServer
-	echo "cp ./package.json ./production/"
+  gulp buildServer
+  echo "cp ./package.json ./production/"
 	cp ./package.json ./production/
 
-	if [ -e ./config/Dockerfiles/${nodeEnv} ]
+  if [ -e ./config/Dockerfiles/${nodeEnv} ]
 	then
 	  cp ./config/Dockerfiles/${nodeEnv} ./production/Dockerfile
 	else
 	  echo "no ${nodeEnv} Dockerfile, skip"
 	fi
 
-	gsed -i "s/\"start\": \".*/\"start\": \"NODE_ENV=${nodeEnv} PRETTY_LOG=${prettyLog} pm2 start .\/index.js --no-daemon\",/g" ./production/package.json
-	cd ./production
-	git add -A
-	now=`date +%Y_%m_%d_%H_%M_%S`
-	git commit -m "${now}"  || echo "nothing to commit"
-	echo "git push -u production master:${projectName} -f"
-	git push -u production master:${projectName} -f
-	resetDir
+  cd production
+  cat package.json | jq ".scripts.start=\"NODE_ENV=${nodeEnv} pm2 start .\/index.js --no-daemon\" | .devDependencies={}" > __package__.json
+	rm package.json
+	mv __package__.json package.json
+
+	push deploy
 }
 
-pushCoding $*
+
+function initGit() {
+  remoteName=$1;
+  url=$2;
+
+  # 获取remote url
+  remoteVerbose=`git remote -v | grep -E "${remoteName}\s+.+push)"`
+
+  if [ -z "${remoteVerbose}" ]
+  then
+    if [ -z "${url}" ]
+    then
+      echo "set push url at package.json"
+
+      kill -s TERM ${TOP_PID}
+      exit 1
+    fi
+
+    git init
+    echo "git remote add ${remoteName} ${url}"
+    git remote add ${remoteName} ${url}
+  fi
+}
+
+function push() {
+  env=${1:-dev};
+
+  pushUrl=$(getConfig "push.${env}.url")
+	pushRemote=$(getConfig "push.${env}.remote" "origin")
+  currentBranch=$(currentBranch)
+	pushBranch=$(getConfig "push.${env}.branch")
+
+	if [ ${pushBranch} = "__package_name__" ]
+	then
+	  pushBranch=$(getConfig "name")
+	elif [ -z "${pushBranch}" -o ${pushBranch} = "null" ]
+	then
+	  pushBranch=${currentBranch}
+	fi
+
+  initGit ${pushRemote} ${pushUrl}
+
+  if [ ${env} = "deploy" ]
+  then
+    git add -A
+    now=`date +%Y_%m_%d_%H_%M_%S`
+    git commit -m "${now}" || echo ""
+    echo "git push ${pushRemote} ${currentBranch}:${pushBranch} -f"
+	  git push ${pushRemote} ${currentBranch}:${pushBranch} -f
+  else
+    echo "git push ${pushRemote} ${currentBranch}:${pushBranch}"
+	  git push ${pushRemote} ${currentBranch}:${pushBranch}
+	fi
+}
+
+
+function checkDependence() {
+	if ! command -v ${1} > /dev/null 2>&1;then
+    echo "no ${1} found, please use: \nbrew install ${1}"
+    exit 1;
+	fi
+}
+
+function checkDependencies() {
+	checkDependence gsed
+	checkDependence jq
+}
+
+function lift() {
+  env=${1:-dev}
+  nodeEnv=${2:-leancloud}
+
+  checkDependencies
+
+  if [ ${env} = "deploy" ]
+  then
+    pushDeploy ${nodeEnv}
+  else
+    push
+	fi
+}
+
+lift $*

@@ -1,13 +1,7 @@
 .PHONY: all test clean static
 d=template2
-templateVersion=v2
 gulp:
 	@ gulp
-node-dev:
-	node-dev --respawn src/index.js
-merge:
-	git fetch template $(templateVersion)
-	git merge remotes/template/$(templateVersion)
 test:
 	@ if [ -n "$(g)" ]; \
 	then \
@@ -24,15 +18,15 @@ pushHeroku:
 	cp ./package.json ./production
 	gsed -i 's/"start": ".*/"start": "NODE_ENV=heroku pm2 start .\/index.js --no-daemon",/g' ./production/package.json
 	cd ./production && git add -A && git commit -m "auto" && git push heroku master && heroku logs --tail
-dev:
-	@ sh ./config/start.sh
-pushProd:
-	@ sh ./config/push.sh
+merge:
+	git fetch template __template_branch__
+	git merge remotes/template/__template_branch__
+push:
+	@ sh config/push.sh
+deploy:
+	@ sh config/push.sh deploy $(e)
 copy:
-	@ sh ./config/copy.sh $(d)
-static:
-	gulp static
-	cd static && hs
+	@ sh config/copy.sh $(d)
 rsync:
 	cp ./package.json ./production
 	gsed -i 's/"start": ".*/"start": "PORT=1337 NODE_ENV=production pm2 start .\/index.js --name template:1337",/g' ./production/package.json
