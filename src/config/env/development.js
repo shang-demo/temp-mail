@@ -2,7 +2,8 @@
 module.exports = {
   log: {
     level: 'trace',
-    body: true,
+    requestBody: true,
+    responseBody: true,
   },
   connections: {
     defaultMongo: {

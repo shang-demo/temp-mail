@@ -6,12 +6,19 @@ module.exports.http = {
     function requestLog() {
       return async (ctx, next) => {
         const start = new Date();
+        const arr = [];
+        if (mKoa.config.log.requestBody && ctx.method !== 'GET') {
+          arr.push('--');
+          arr.push(ctx.body || {});
+        }
+
         await next();
 
         let ms = new Date() - start;
-        let arr = [`${ctx.method} ${ctx.url} - ${ctx.status} - ${ms}ms`];
+        arr.unshift(`${ctx.method} ${ctx.url} - ${ctx.status} - ${ms}ms`);
 
-        if (mKoa.config.log.body) {
+        if (mKoa.config.log.responseBody) {
+          arr.push('---');
           // eslint-disable-next-line no-underscore-dangle
           if (ctx.body && ctx.body._readableState) {
             arr.push('response send buffer');

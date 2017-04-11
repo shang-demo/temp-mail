@@ -17,9 +17,8 @@ function update() {
 
   return lift
     .on('lifted', () => {
-      logger.info('lifted');
-      logger.info('updateFile: ', updateFile);
-      Promise
+      logger.info('lifted, updateFile: ', updateFile);
+      return Promise
         .try(() => {
           /* eslint-disable global-require */
           /* eslint-disable import/no-dynamic-require */

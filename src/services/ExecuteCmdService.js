@@ -142,7 +142,7 @@ function tryAutoDeploy(body) {
   }
   let url = _.get(body, 'repository.https_url');
   let name = _.get(body, 'repository.name');
-  let appPath = mKoa.environment === 'development' ? 'app/app.js' : 'app.js';
+  let appPath = mKoa.environment === 'development' ? 'src/index.js' : 'index.js';
   if (!url || !name) {
     return Promise.reject(new Error('no url or no name'));
   }

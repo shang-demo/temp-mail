@@ -2,14 +2,9 @@
 
 module.exports = {
   log: {
-    options: {
-      prettyPrint: {
-        dateFormatter: false,
-        pidAndHostname: true,
-        sameLevelColorMessage: false,
-      },
-    },
     level: 'trace',
+    requestBody: true,
+    responseBody: false,
   },
   connections: {
     defaultMongo: {
