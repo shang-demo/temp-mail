@@ -109,12 +109,31 @@ gulp.task('wlint', (done) => {
     return done();
   }
 
+  let lintTimer = null;
+
   gulp.series('lint')();
   gulp.watch(config.server.src, config.server.opt)
     .on('change', (filePath) => {
-      console.info(`${filePath} do eslint`);
-      // js文件需要 jshint
-      gulp.series('lint')();
+      clearTimeout(lintTimer);
+
+      lintTimer = setTimeout(() => {
+        utilities
+          .spawnDefer({
+            cmd: 'clear',
+            arg: [],
+          })
+          .then(() => {
+            console.info(`${filePath} do eslint`);
+            // js文件需要 jshint
+            gulp.series('lint')();
+          })
+          .catch(function (e) {
+            console.warn(e);
+            console.info(`${filePath} do eslint`);
+            // js文件需要 jshint
+            gulp.series('lint')();
+          });
+      });
     });
 
   return done();
@@ -150,13 +169,6 @@ gulp.task('nodemon', (done) => {
         title: 'Application has crashed!',
         message: utilities.dateFormat('hh:mm:ss'),
       });
-    },
-    start() {
-      utilities
-        .spawnDefer({
-          cmd: 'clear',
-          arg: [],
-        });
     },
   };
 
