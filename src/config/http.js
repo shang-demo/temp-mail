@@ -3,34 +3,41 @@ const cors = require('kcors');
 
 module.exports.http = {
   middlewares: [
-    function requestLog() {
+    function log() {
       return async (ctx, next) => {
         const start = new Date();
-        const arr = [];
-        if (mKoa.config.log.requestBody && ctx.method !== 'GET') {
-          arr.push('--');
-          arr.push(ctx.body || {});
-        }
+        ctx.__logs__ = [];
 
         await next();
 
         let ms = new Date() - start;
-        arr.unshift(`${ctx.method} ${ctx.url} - ${ctx.status} - ${ms}ms`);
+        ctx.__logs__.unshift(`${ctx.method} ${ctx.url} - ${ctx.status} - ${ms}ms`);
 
         if (mKoa.config.log.responseBody) {
-          arr.push('---');
+          ctx.__logs__.push('---');
           // eslint-disable-next-line no-underscore-dangle
           if (ctx.body && ctx.body._readableState) {
-            arr.push('response send buffer');
+            ctx.__logs__.push('response send buffer');
           }
           else {
-            arr.push(ctx.body || '');
+            ctx.__logs__.push(ctx.body || '');
           }
         }
-        logger.trace(...arr);
+
+        logger.trace(...ctx.__logs__);
       };
     },
     cors,
     bodyParser,
+    function requestBodyLog() {
+      return async (ctx, next) => {
+        if (mKoa.config.log.requestBody && ctx.method !== 'GET') {
+          ctx.__logs__.push('--');
+          ctx.__logs__.push(ctx.request.body || {});
+        }
+
+        await next();
+      };
+    }
   ],
 };

@@ -1,5 +1,5 @@
 module.exports.policies = {
-  '*': ['wrapError', 'tokenAuth'],
+  '*': ['wrapError'],
   ExecuteCmdController: {
     '*': ['wrapError', 'execCmdAuth'],
   },
