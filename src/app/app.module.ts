@@ -6,7 +6,6 @@ import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularcla
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import { MaterialModule } from '@angular/material';
 import { SlimLoadingBarModule } from 'ng2-slim-loading-bar';
-import 'hammerjs';
 
 /*
  * Platform and Environment providers/directives/pipes

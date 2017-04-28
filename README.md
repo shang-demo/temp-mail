@@ -1,5 +1,5 @@
 ## clientTemplate
 
-- angular2
+- angular
 - webpack
 - material
