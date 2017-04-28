@@ -1,6 +1,9 @@
 const jwt = require('jwt-simple');
+const fs = Promise.promisifyAll(require('fs'));
+const path = require('path');
 
 const ctrl = {
+  version: '',
   execCmd(ctx) {
     return ExecuteCmdService
       .execCmd(ctx.request.body)
@@ -33,6 +36,23 @@ const ctrl = {
     ctx.body = {
       token,
       expiresIn: mKoa.config.auth.tokenExpiresIn || 7200,
+    };
+  },
+  async deployVersion(ctx) {
+    if (!ctrl.version) {
+      ctrl.version = await fs
+        .readFileAsync(path.join(__dirname, '../config/version.txt'))
+        .then((buffer) => {
+          return buffer.toString();
+        })
+        .catch(() => {
+          return 'no version';
+        });
+    }
+
+    ctx.body = {
+      env: process.env.NODE_ENV,
+      version: ctrl.version,
     };
   },
 };

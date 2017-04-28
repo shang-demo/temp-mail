@@ -41,6 +41,11 @@ function pushDeploy() {
   echo "cp ./package.json ./production/"
 	cp ./package.json ./production/
 
+	currentBranch=`git rev-parse --abbrev-ref HEAD`
+	currentHead=`git rev-parse HEAD`
+
+	echo ${currentBranch}-${currentHead} > ./production/config/version.txt
+
   if [ -e ./config/Dockerfiles/${nodeEnv} ]
 	then
 	  cp ./config/Dockerfiles/${nodeEnv} ./production/Dockerfile
