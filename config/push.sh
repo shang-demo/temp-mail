@@ -43,8 +43,9 @@ function pushDeploy() {
 
 	currentBranch=`git rev-parse --abbrev-ref HEAD`
 	currentHead=`git rev-parse HEAD`
+	pushDate=`date +%Y_%m_%d_%H_%M_%S`
 
-	echo ${currentBranch}-${currentHead} > ./production/config/version.txt
+	echo ${currentBranch}-${pushDate}-${currentHead} > ./production/config/version.txt
 
   if [ -e ./config/Dockerfiles/${nodeEnv} ]
 	then
