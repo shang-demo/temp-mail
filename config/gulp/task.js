@@ -170,6 +170,13 @@ gulp.task('nodemon', (done) => {
         message: utilities.dateFormat('hh:mm:ss'),
       });
     },
+    start() {
+      utilities
+        .spawnDefer({
+          cmd: 'clear',
+          arg: [],
+        });
+    },
   };
 
   Object.keys(config.nodemon.event).forEach((eventName) => {
@@ -180,8 +187,11 @@ gulp.task('nodemon', (done) => {
     else if (event === true && defaultEvent[eventName]) {
       stream.on(eventName, defaultEvent[eventName]);
     }
+    else if (event === undefined || event === false) {
+      return null;
+    }
     else {
-      console.warn(`not support for ${eventName}`);
+      console.warn(`nodemon event not support for ${eventName}`);
     }
   });
 

@@ -56,7 +56,7 @@ function getCommonConfig() {
       },
       event: {
         crash: true,
-        start: true,
+        start: false,
       }
     }
   };
