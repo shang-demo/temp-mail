@@ -51,8 +51,8 @@ function getCommonConfig() {
         ext: 'js',
         watch: ['src/'],
         env: {
-          'NODE_ENV': 'development'
-        }
+          NODE_ENV: 'development'
+        },
       },
       event: {
         crash: true,

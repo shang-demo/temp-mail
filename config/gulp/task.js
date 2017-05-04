@@ -127,7 +127,7 @@ gulp.task('wlint', (done) => {
             // js文件需要 jshint
             gulp.series('lint')();
           })
-          .catch(function (e) {
+          .catch((e) => {
             console.warn(e);
             console.info(`${filePath} do eslint`);
             // js文件需要 jshint
@@ -167,7 +167,7 @@ gulp.task('nodemon', (done) => {
       console.error('Application has crashed!\n');
       notifier.notify({
         title: 'Application has crashed!',
-        message: utilities.dateFormat('hh:mm:ss'),
+        message: utilities.formatDate('hh:mm:ss'),
       });
     },
     start() {
@@ -179,21 +179,24 @@ gulp.task('nodemon', (done) => {
     },
   };
 
-  Object.keys(config.nodemon.event).forEach((eventName) => {
-    let event = config.nodemon.event[eventName];
-    if (typeof eventName === 'function') {
-      stream.on(eventName, event);
-    }
-    else if (event === true && defaultEvent[eventName]) {
-      stream.on(eventName, defaultEvent[eventName]);
-    }
-    else if (event === undefined || event === false) {
+  Object
+    .keys(config.nodemon.event)
+    .forEach((eventName) => {
+      let event = config.nodemon.event[eventName];
+      if (typeof eventName === 'function') {
+        stream.on(eventName, event);
+      }
+      else if (event === true && defaultEvent[eventName]) {
+        stream.on(eventName, defaultEvent[eventName]);
+      }
+      else if (event === undefined || event === false) {
+        return null;
+      }
+      else {
+        console.warn(`nodemon event not support for ${eventName}`);
+      }
       return null;
-    }
-    else {
-      console.warn(`nodemon event not support for ${eventName}`);
-    }
-  });
+    });
 
   return done();
 });
