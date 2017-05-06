@@ -6,38 +6,51 @@ module.exports.http = {
     function log() {
       return async (ctx, next) => {
         const start = new Date();
-        ctx.__logs__ = [];
+        let logs = [];
 
         await next();
 
         let ms = new Date() - start;
-        ctx.__logs__.unshift(`${ctx.method} ${ctx.url} - ${ctx.status} - ${ms}ms`);
+        logs.push(`${ctx.method} ${ctx.url} - ${ctx.status} - ${ms}ms`);
 
         if (mKoa.config.log.responseBody) {
-          ctx.__logs__.push('---');
+          logs.push('---');
           // eslint-disable-next-line no-underscore-dangle
           if (ctx.body && ctx.body._readableState) {
-            ctx.__logs__.push('response send buffer');
+            logs.push('response send buffer');
           }
           else {
-            ctx.__logs__.push(ctx.body || '');
+            logs.push(ctx.body || '');
           }
         }
 
-        logger.trace(...ctx.__logs__);
+        logger.trace(...logs);
       };
     },
     cors,
     bodyParser,
     function requestBodyLog() {
+      if (!mKoa.config.log.requestBody) {
+        return async (ctx, next) => {
+          await next();
+        };
+      }
+
       return async (ctx, next) => {
-        if (mKoa.config.log.requestBody && ctx.method !== 'GET') {
-          ctx.__logs__.push('--');
-          ctx.__logs__.push(ctx.request.body || {});
+        if (['POST', 'UPDATE', 'GET'].indexOf(ctx.method) === -1) {
+          await next();
+          return;
         }
+
+        let logs = [`${ctx.method} ${ctx.url} -- query:`, ctx.request.query || {}];
+        if (ctx.method === 'POST' || ctx.method === 'UPDATE') {
+          logs.push('--- body:');
+          logs.push(ctx.request.body || {});
+        }
+        logger.trace(...logs);
 
         await next();
       };
-    }
+    },
   ],
 };
