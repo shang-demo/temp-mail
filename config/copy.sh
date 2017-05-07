@@ -58,10 +58,12 @@ function initProject() {
   # change merge branch
 	gsed -i "s|__template_branch__|${templateVersion}|g" Makefile
   # change project name and push remote
-	cat package.json | jq ".name=\"${projectName}\" | .push.dev.url=\"\" | .push.dev.remote=\"origin\" | .push.dev.branch=\"\"" > __package__.json
+	cat package.json | jq ".name=\"${projectName}\" | .version=\"0.0.1\" | .push.dev.url=\"\" | .push.dev.remote=\"origin\" | .push.dev.branch=\"\"" > __package__.json
 	rm package.json
 	mv __package__.json package.json
 	rm config/copy.sh
+
+	echo "# ${projectName}" > README.md
 
 	git add -A;
 	git commit -m "init project";

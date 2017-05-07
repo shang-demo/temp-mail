@@ -1,7 +1,9 @@
 {
-  "name": "serverTemplate",
+  "name": "server-template",
   "version": "0.1.0",
-  "author": "SHANG",
+  "main": "src/index.js",
+  "repository": "https://github.com/shang-demo/server-template.git",
+  "author": "xinshangshangxin <xinshangshangxin@gmail.com>",
   "license": "MIT",
   "engines": {
     "node": ">=7.6.0"
