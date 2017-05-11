@@ -55,7 +55,7 @@ function pushDeploy() {
 	fi
 
   cd production
-  cat package.json | jq ".scripts.start=\"NODE_ENV=${nodeEnv} pm2 start .\/index.js --no-daemon\" | .devDependencies={}" > __package__.json
+  cat package.json | jq ".scripts.start=\"NODE_ENV=${nodeEnv} pm2-docker start .\/index.js --raw\" | .devDependencies={}" > __package__.json
 	rm package.json
 	mv __package__.json package.json
 
