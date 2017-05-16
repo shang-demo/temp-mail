@@ -29,7 +29,11 @@ const AOT = helpers.hasNpmFlag('aot');
 const METADATA = {
   title: 'Angular2 Webpack Starter',
   baseUrl: '/',
-  isDevServer: helpers.isWebpackDevServer()
+  isDevServer: helpers.isWebpackDevServer(),
+  SERVER_URL: {
+    default: 'http://localhost:1337',
+    prod: 'http://localhost:1337'
+  },
 };
 
 /*
@@ -192,6 +196,15 @@ module.exports = function (options) {
         { 
           test: /\.(eot|woff2?|svg|ttf)([\?]?.*)$/,
           use: 'file-loader'
+        },
+
+        {
+          test: /\.ts$/,
+          loader: 'string-replace-loader',
+          query: {
+            search: 'SERVER_URL',
+            replace: isProd ? METADATA.SERVER_URL.prod : METADATA.SERVER_URL.default,
+          }
         }
 
       ],
