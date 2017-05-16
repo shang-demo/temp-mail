@@ -37,7 +37,7 @@ function createFile() {
 }
 
 function Capitalized() {
-  echo ${1} | gsed "s/\b[a-z]/\U&/gi"
+  echo ${1} | gsed "s/\b[a-z]/\U&/gi" | gsed "s/\-//g"
 }
 
 function getIndexStr() {
