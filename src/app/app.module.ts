@@ -4,7 +4,6 @@ import { HttpModule } from '@angular/http';
 import { NgModule, ApplicationRef } from '@angular/core';
 import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
 import { RouterModule, PreloadAllModules } from '@angular/router';
-import { MaterialModule } from '@angular/material';
 import { SlimLoadingBarModule } from 'ng2-slim-loading-bar';
 
 /*
@@ -19,6 +18,7 @@ import { AppState, InternalStateType } from './app.service';
 import { HomeComponent } from './home';
 
 import '../styles/styles.scss';
+import { MdButtonModule } from '@angular/material';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -45,7 +45,7 @@ type StoreType = {
     BrowserModule,
     FormsModule,
     HttpModule,
-    MaterialModule.forRoot(),
+    MdButtonModule,
     SlimLoadingBarModule.forRoot(),
     RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules }),
   ],
