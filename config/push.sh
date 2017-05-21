@@ -11,6 +11,9 @@ function resetDir() {
 
 function getConfig() {
   configName=${1};
+  configDefaultValue=${2-""}
+  configFile=${3-"config/push.config.json"};
+
   if [ -z "${configName}" ]
   then
     echo "no config name found";
@@ -19,7 +22,16 @@ function getConfig() {
     exit 1;
   fi
 
-  value=`cat package.json | jq -r ".${configName}"`;
+  if [ ! -f "${projectDir}/config/push.config.json" ]
+  then
+    echo "${projectDir}/config/push.config.json not found";
+    # 退出不再执行
+    kill -s TERM ${TOP_PID}
+    exit 1;
+  fi
+
+
+  value=`cat ${projectDir}/${configFile} | jq -r ".${configName}"`;
   if [ -z "${value}" -o ${value} = "null" ]
   then
     value=${2}
@@ -89,14 +101,14 @@ function initGit() {
 function push() {
   env=${1:-dev};
 
-  pushUrl=$(getConfig "push.${env}.url")
-	pushRemote=$(getConfig "push.${env}.remote" "origin")
+  pushUrl=$(getConfig "${env}.url")
+	pushRemote=$(getConfig "${env}.remote" "origin")
   currentBranch=$(currentBranch)
-	pushBranch=$(getConfig "push.${env}.branch")
+	pushBranch=$(getConfig "${env}.branch")
 
 	if [ ${pushBranch} = "__package_name__" ]
 	then
-	  pushBranch=$(getConfig "name")
+	  pushBranch=$(getConfig "name" "" "package.json")
 	elif [ -z "${pushBranch}" -o ${pushBranch} = "null" ]
 	then
 	  pushBranch=${currentBranch}
