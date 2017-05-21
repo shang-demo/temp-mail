@@ -86,7 +86,7 @@ function initGit() {
   then
     if [ -z "${url}" ]
     then
-      echo "set push url at package.json"
+      echo "set push url at config/push.config.json"
 
       kill -s TERM ${TOP_PID}
       exit 1
