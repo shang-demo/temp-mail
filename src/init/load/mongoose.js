@@ -2,6 +2,7 @@ const _ = require('lodash');
 const path = require('path');
 const Promise = require('bluebird');
 const mongoose = require('mongoose');
+const mongodbUri = require('mongodb-uri');
 
 mongoose.Promise = Promise;
 
@@ -18,35 +19,15 @@ function getDb(connection, connections) {
     throw new Error(`no ${connection} found`);
   }
 
-  let mongodbUri = getMongodbUri(connections[connection]);
-  logger.debug('start connect mongodb: ', mongodbUri);
+  let uri = getMongodbUri(connections[connection]);
+  logger.debug('start connect mongodb: ', uri);
 
-  dbList[connection] = mongoose.createConnection(mongodbUri);
+  dbList[connection] = mongoose.createConnection(uri);
   return dbList[connection];
 }
 
 function close() {
   return mongoose.disconnect();
-}
-
-function resolveEnvUrl(config) {
-  if (config.condition && !process.env[config[config.condition]]) {
-    return false;
-  }
-
-  let mongodbUri = 'mongodb://';
-  if (process.env[config.username]) {
-    mongodbUri += process.env[config.username];
-
-    if (process.env[config.password]) {
-      mongodbUri += `:${process.env[config.password]}`;
-    }
-    mongodbUri += '@';
-  }
-
-  mongodbUri += `${process.env[config.host] || '127.0.0.1'}:${process.env[config.port] || 27017}/${process.env[config.name] || config.dbName}`;
-
-  return mongodbUri;
 }
 
 function getMongodbUri(config = {}) {
@@ -56,14 +37,12 @@ function getMongodbUri(config = {}) {
       uri = config.fun();
       break;
     }
-    case 'env': {
-      uri = resolveEnvUrl(config);
+    case 'uri': {
+      uri = config.uri;
       break;
     }
-    case 'uri': {
-      return config.uri;
-    }
     default: {
+      uri = mongodbUri.format(config);
       break;
     }
   }
@@ -72,7 +51,7 @@ function getMongodbUri(config = {}) {
     return uri;
   }
 
-  return `mongodb://127.0.0.1:27017/${config.dbName}`;
+  return `mongodb://127.0.0.1:27017/${config.database}`;
 }
 
 function define(db, modelName, opt, config) {

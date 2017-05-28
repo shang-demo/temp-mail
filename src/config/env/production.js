@@ -9,9 +9,15 @@ module.exports = {
   },
   connections: {
     defaultMongo: {
-      type: 'uri',
-      uri: `mongodb://leancloudUser:${MONGODB_PASSWORD}@112.74.107.82:13508/${DATABASE}`,
-      collectionPrefix: '',
+      username: 'leancloudUser',
+      password: MONGODB_PASSWORD,
+      hosts: [
+        {
+          host: '112.74.107.82',
+          port: 13508,
+        }
+      ],
+      database: DATABASE,
     },
   },
   auth: {

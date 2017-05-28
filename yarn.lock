@@ -3585,6 +3585,10 @@ mongodb-core@2.1.10:
     bson "~1.0.4"
     require_optional "~1.0.0"
 
+mongodb-uri@^0.9.7:
+  version "0.9.7"
+  resolved "https://registry.yarnpkg.com/mongodb-uri/-/mongodb-uri-0.9.7.tgz#0f771ad16f483ae65f4287969428e9fbc4aa6181"
+
 mongodb@2.2.26:
   version "2.2.26"
   resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-2.2.26.tgz#1bd50c557c277c98e1a05da38c9839c4922b034a"
@@ -4142,8 +4146,8 @@ pino@shang-package/pino:
   resolved "https://codeload.github.com/shang-package/pino/tar.gz/c354ffc591e7bfaf4d7d2219fa3c7d3ce78a8225"
   dependencies:
     chalk "^1.1.1"
-    fast-json-parse "^1.0.2"
-    fast-safe-stringify "^1.1.13"
+    fast-json-parse "^1.0.0"
+    fast-safe-stringify "^1.1.3"
     flatstr "^1.0.4"
     once "^1.3.3"
     pump "^1.0.2"

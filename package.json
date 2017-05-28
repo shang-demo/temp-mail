@@ -23,6 +23,7 @@
     "koa-bodyparser": "^4.2.0",
     "koa-router": "7.2.0",
     "lodash": "^4.17.4",
+    "mongodb-uri": "^0.9.7",
     "mongoose": "4.10.2",
     "nodemailer": "^4.0.1",
     "pino": "shang-package/pino",

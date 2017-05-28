@@ -7,10 +7,12 @@ module.exports = {
   },
   connections: {
     defaultMongo: {
-      dbName: 'noDbName',
-      appId: process.env.APP_ID,
-      appKey: process.env.APP_KEY,
-      masterKey: process.env.MASTER_KEY,
+      hosts: [
+        {
+          host: '127.0.0.1',
+        }
+      ],
+      database: 'noName',
     },
   },
   auth: {
