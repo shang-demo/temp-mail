@@ -81,7 +81,7 @@ function initProject() {
 	rm package.json
 	mv __package__.json package.json
 
-	cat config/push.config.json | jq ".merge=null | .dev.url=\"\" | .dev.remote=\"origin\" | .dev.branch=\"\"" > config/__push.config.json__
+	cat config/push.config.json | jq "del(.merge) | .dev.url=\"\" | .dev.remote=\"origin\" | .dev.branch=\"\"" > config/__push.config.json__
 	rm config/push.config.json
 	mv config/__push.config.json__ config/push.config.json
 
