@@ -1,5 +1,6 @@
+const MONGODB_DATABASE = 'production';
+const MONGODB_USERNAME = 'productionUser';
 const MONGODB_PASSWORD = process.env.MONGODB_PASSWORD;
-const DATABASE = 'noName';
 
 module.exports = {
   log: {
@@ -9,7 +10,7 @@ module.exports = {
   },
   connections: {
     defaultMongo: {
-      username: 'leancloudUser',
+      username: MONGODB_USERNAME,
       password: MONGODB_PASSWORD,
       hosts: [
         {
@@ -17,7 +18,7 @@ module.exports = {
           port: 13508,
         }
       ],
-      database: DATABASE,
+      database: MONGODB_DATABASE,
     },
   },
   auth: {
