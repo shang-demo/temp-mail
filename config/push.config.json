@@ -8,5 +8,10 @@
     "url": "git@gitlab.com:demoshang/server-projects.git",
     "remote": "prod",
     "branch": "__package_name__"
+  },
+  "merge": {
+    "url": "https://github.com/shang-demo/server-template.git",
+    "remote": "template",
+    "branch": "v2"
   }
 }

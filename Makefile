@@ -19,8 +19,8 @@ pushHeroku:
 	gsed -i 's/"start": ".*/"start": "NODE_ENV=heroku pm2 start .\/index.js --no-daemon",/g' ./production/package.json
 	cd ./production && git add -A && git commit -m "auto" && git push heroku master && heroku logs --tail
 merge:
-	git fetch template __template_branch__
-	git merge remotes/template/__template_branch__
+	git fetch __template_remote__ __template_branch__
+	git merge remotes/__template_remote__/__template_branch__
 push:
 	@ sh config/push.sh
 deploy:

@@ -36,8 +36,9 @@ function getConfig() {
 }
 
 function initProject() {
-	templateVersion=$(getConfig "dev.branch")
-	templateRemote=$(getConfig "dev.url")
+	mergeBranch=$(getConfig "merge.branch")
+	mergeUrl=$(getConfig "merge.url")
+	mergeRemote=$(getConfig "merge.remote")
 
 	if [ -z "$1" ]
 	then
@@ -67,19 +68,20 @@ function initProject() {
 	mkdir -p ${cpDir};
 	cd ${cpDir};
 	git init;
-	git remote add template ${templateRemote};
+	git remote add ${mergeRemote} ${mergeUrl};
 	git remote -v;
-	git fetch template ${templateVersion};
-	git checkout -b master remotes/template/${templateVersion};
+	git fetch ${mergeRemote} ${mergeBranch};
+	git checkout -b master remotes/${mergeRemote}/${mergeBranch};
 
   # change merge branch
-	gsed -i "s|__template_branch__|${templateVersion}|g" Makefile
+	gsed -i "s|__template_remote__|${mergeRemote}|g" Makefile
+	gsed -i "s|__template_branch__|${mergeBranch}|g" Makefile
   # change project name and push remote
 	cat package.json | jq ".name=\"${projectName}\" | .version=\"0.0.1\"" > __package__.json
 	rm package.json
 	mv __package__.json package.json
 
-	cat config/push.config.json | jq ".dev.url=\"\" | .dev.remote=\"origin\" | .dev.branch=\"\"" > config/__push.config.json__
+	cat config/push.config.json | jq ".merge=null | .dev.url=\"\" | .dev.remote=\"origin\" | .dev.branch=\"\"" > config/__push.config.json__
 	rm config/push.config.json
 	mv config/__push.config.json__ config/push.config.json
 
