@@ -56,7 +56,7 @@ function lift() {
     }
 
     let actionMethodName = actionParts[1];
-    let actionMethod = controller[actionMethodName];
+    let actionMethod = controller[actionMethodName].bind(controller);
 
     if (!actionMethod) {
       throw new Error(`undefined action method: ${action}`);
