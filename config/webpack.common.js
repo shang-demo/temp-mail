@@ -27,7 +27,10 @@ const ngcWebpack = require('ngc-webpack');
 const HMR = helpers.hasProcessFlag('hot');
 const AOT = helpers.hasNpmFlag('aot');
 const METADATA = {
-  title: 'Angular2 Webpack Starter',
+  title: {
+    prod: 'Angular2 Webpack Starter',
+    default: 'development',
+  },
   baseUrl: '/',
   isDevServer: helpers.isWebpackDevServer(),
   SERVER_URL: {
@@ -293,7 +296,7 @@ module.exports = function (options) {
        */
       new HtmlWebpackPlugin({
         template: 'src/index.html',
-        title: METADATA.title,
+        title: isProd ? METADATA.title.prod : METADATA.title.default,
         chunksSortMode: 'dependency',
         metadata: METADATA,
         inject: 'head'
