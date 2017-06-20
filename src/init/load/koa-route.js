@@ -77,7 +77,10 @@ function lift() {
 
   server.listen(port, host);
   server.on('error', onError);
-  server.on('listening', onListening);
+  server.on('listening', () => {
+    onListening();
+    this.emit('listening');
+  });
 
   function onError(error) {
     if (error.syscall !== 'listen') {
