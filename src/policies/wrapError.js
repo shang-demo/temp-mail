@@ -17,7 +17,9 @@ function wrapError(e, otherError, errStatus) {
     return;
   }
 
-  this.body = new Errors.UnknownError();
+  this.body = new Errors.UnknownError({
+    originErrMsg: e && e.message,
+  });
   this.status = 400;
 }
 
