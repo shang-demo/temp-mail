@@ -14,7 +14,7 @@ const ctrl = {
       };
     }
 
-    /* eslint max-len: ["error", 120]*/
+    /* eslint max-len: ["error", 120] */
     return UtilService.conditionsQuerySend(Webhook, ctx, new Errors.QueryError(), opt);
   },
   async get(ctx) {

@@ -5,7 +5,7 @@ const filePathOneLayer = require('../utilities/file-path-one-layer');
 function lift() {
   /* eslint-disable global-require */
   /* eslint-disable import/no-dynamic-require */
-  /* eslint max-len: ["error", 150]*/
+  /* eslint max-len: ["error", 150] */
 
   // eslint-disable-next-line no-multi-assign
   let policies = this.policies = {};

@@ -1,6 +1,5 @@
 module.exports = {
-  extends: 'airbnb',
-  installedESLint: true,
+  extends: 'airbnb-base',
   plugins: [],
   globals: {
     _: false,
@@ -31,7 +30,7 @@ module.exports = {
       props: false,
     }],
     'no-underscore-dangle': ['error', {
-      allow: ['_id', '__logs__', '_scan', '_updateById'],
+      allow: ['_id'],
     }],
     'no-use-before-define': ['error', {
       functions: false,

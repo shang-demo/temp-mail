@@ -35,8 +35,7 @@ const svc = {
 
 module.exports = svc;
 
-/**
-
+/*
  require('../services/hookService').on({
       id: 'id001',
       data: {
@@ -49,6 +48,4 @@ module.exports = svc;
     }, 'Test:afterCreate');
 
  res.json({});
-
-
- **/
+*/
