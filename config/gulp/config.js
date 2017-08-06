@@ -54,7 +54,7 @@ function getCommonConfig() {
           NODE_ENV: 'development'
         },
       },
-      event: {
+      events: {
         crash: true,
         start: false,
       }

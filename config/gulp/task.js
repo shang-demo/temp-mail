@@ -3,8 +3,27 @@
 
 const notifier = require('node-notifier');
 const gulp = require('gulp');
+const nodemon = require('nodemon');
 const utilities = require('./utilities');
 const rebuildTypings = require('../generate-typings').init;
+
+const defaultNodemonEvent = {
+  crash() {
+    console.error('Application has crashed!\n');
+    notifier.notify({
+      title: 'Application has crashed!',
+      message: utilities.formatDate('hh:mm:ss'),
+    });
+  },
+  start() {
+    utilities
+      .spawnDefer({
+        cmd: 'clear',
+        arg: [],
+      });
+  },
+};
+
 let gulpConfig = require('./config.js');
 
 let specConfig = null;       // 在环境初始化之后再读取配置
@@ -160,34 +179,17 @@ gulp.task('buildServer', gulp.series(
 ));
 
 gulp.task('nodemon', (done) => {
-  let stream = $.nodemon(config.nodemon.config);
-
-  let defaultEvent = {
-    crash() {
-      console.error('Application has crashed!\n');
-      notifier.notify({
-        title: 'Application has crashed!',
-        message: utilities.formatDate('hh:mm:ss'),
-      });
-    },
-    start() {
-      utilities
-        .spawnDefer({
-          cmd: 'clear',
-          arg: [],
-        });
-    },
-  };
+  nodemon(config.nodemon.config);
 
   Object
-    .keys(config.nodemon.event)
+    .keys(config.nodemon.events)
     .forEach((eventName) => {
-      let event = config.nodemon.event[eventName];
+      let event = config.nodemon.events[eventName];
       if (typeof eventName === 'function') {
-        stream.on(eventName, event);
+        nodemon.on(eventName, event);
       }
-      else if (event === true && defaultEvent[eventName]) {
-        stream.on(eventName, defaultEvent[eventName]);
+      else if (event === true && defaultNodemonEvent[eventName]) {
+        nodemon.on(eventName, defaultNodemonEvent[eventName]);
       }
       else if (event === undefined || event === false) {
         return null;

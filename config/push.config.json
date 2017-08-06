@@ -2,7 +2,7 @@
   "dev": {
     "url": "git@github.com:shang-demo/server-template.git",
     "remote": "template",
-    "branch": "v2"
+    "branch": "v3"
   },
   "deploy": {
     "url": "git@gitlab.com:demoshang/server-projects.git",
@@ -12,6 +12,6 @@
   "merge": {
     "url": "https://github.com/shang-demo/server-template.git",
     "remote": "template",
-    "branch": "v2"
+    "branch": "v3"
   }
 }

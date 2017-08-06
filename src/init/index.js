@@ -40,9 +40,16 @@ class My extends EventEmitter {
   use(middlewareName) {
     let middleware;
     if (_.isString(middlewareName)) {
-      /* eslint-disable global-require */
-      /* eslint-disable import/no-dynamic-require */
-      middleware = require(path.join(this.projectPath, 'init/load', middlewareName));
+      try {
+        /* eslint-disable global-require */
+        /* eslint-disable import/no-dynamic-require */
+        middleware = require(path.join(this.projectPath, 'init/load', middlewareName));
+      }
+      catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn(e);
+        process.exit(1);
+      }
     }
     else if (_.isFunction(middlewareName)) {
       middleware = middlewareName;

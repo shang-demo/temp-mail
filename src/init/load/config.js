@@ -17,11 +17,21 @@ function lift() {
   /* eslint-disable import/no-dynamic-require */
   return filePathOneLayer(configPath)
     .each((file) => {
-      return _.merge(this.config, require(file.path));
+      try {
+        return _.merge(this.config, require(file.path));
+      }
+      catch (e) {
+        return Promise.reject(e);
+      }
     })
     .then(() => {
       let envPath = path.join(this.config.paths.envConfig, this.environment);
-      _.merge(this.config, require(envPath));
+      try {
+        return _.merge(this.config, require(envPath));
+      }
+      catch (e) {
+        return Promise.reject(e);
+      }
     })
     .then(() => {
       return this;

@@ -1,3 +1,5 @@
+const graphqlHTTP = require('koa-graphql');
+
 module.exports.routes = {
 
   // leancloud不使用云函数和Hook
@@ -28,8 +30,11 @@ module.exports.routes = {
   'delete /api/v1/webhook/:id': 'WebhookController.destroy',
 
   // version
-  '/': 'ExecuteCmdController.deployVersion',
   '/version': 'ExecuteCmdController.deployVersion',
+
+  '/': async function graphqlRoutes(...args) {
+    return graphqlHTTP(mKoa.graphqlConfig)(...args);
+  },
 
   // 未找到
   '/*': async function viewHtml(ctx) {

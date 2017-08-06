@@ -36,6 +36,7 @@ module.exports = {
     ref: 'master',
   },
   port: process.env.PORT || 1337,
+  graphiql: true,
   bootstrap: [
     // 'WebhookService',
   ],

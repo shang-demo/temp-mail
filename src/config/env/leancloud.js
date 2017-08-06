@@ -39,6 +39,7 @@ module.exports = {
     },
   },
   port: process.env.LEANCLOUD_APP_PORT || 8080,
+  graphiql: true,
   ip: undefined,
   bootstrap: [],
 };
