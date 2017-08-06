@@ -12,6 +12,8 @@ module.exports = {
     MailSendService: false,
     mKoa: false,
     Mixed: false,
+    ObjectId: false,
+    ObjectID: false,
     Promise: false,
     Webhook: false,
     UtilService: false,

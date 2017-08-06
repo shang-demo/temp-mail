@@ -139,6 +139,7 @@ function initModel(modelName, model, connections) {
     modelName,
     model: result.model,
     schema: result.schema,
+    attributes: model.attributes,
   };
 }
 

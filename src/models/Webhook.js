@@ -1,45 +1,45 @@
 module.exports = {
   attributes: {
     name: {
-      type: 'string',
+      type: String,
       required: true,
       index: true,
     },
     description: {
-      type: 'string',
+      type: String,
     },
     events: {
-      type: 'array',
+      type: Array,
       index: true,
     },
     method: {
-      type: 'string',
+      type: String,
     },
     headerFields: {
-      type: 'array',
+      type: Mixed,
     },
     bodyFields: {
-      type: 'array',
+      type: Mixed,
     },
     useBodyTransform: {
-      type: 'boolean',
+      type: Boolean,
     },
     bodyTransform: {
-      type: 'string',
+      type: String,
     },
     payloadAddress: {
-      type: 'string',
+      type: String,
       required: true,
     },
     contentType: {
-      type: 'string',
+      type: String,
     },
     resolveBody: {
-      type: 'boolean',
+      type: Boolean,
       default: false,
     },
     suspended: {
-      type: 'boolean',
+      type: Boolean,
       required: true,
     },
   },

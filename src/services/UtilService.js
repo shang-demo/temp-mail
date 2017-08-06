@@ -1,5 +1,14 @@
 const exec = require('child_process').exec;
 const spawn = require('child_process').spawn;
+const {
+  GraphQLBoolean,
+  GraphQLID,
+  GraphQLString,
+  GraphQLNonNull,
+  GraphQLFloat,
+} = require('graphql');
+
+const GraphQLJSON = require('graphql-type-json');
 
 const svc = {
   isMongoError(err) {
@@ -181,6 +190,111 @@ const svc = {
         return ctx.wrapError(e, error);
       });
   },
+  /**
+   * @param attributes
+   * @param omit 去除部分属性
+   * @param pick 选择部分属性, 同时omit失效
+   * @param nonNull 这些属性不为空
+   * @param extra     额外属性, 覆盖原有
+   * @param _id         objectId
+   * @param timestamps createdAt && updatedAt
+   * @param plain 默认全部属性按照required来判断, 设置true则为可为空
+   */
+  buildGraphqlType(attributes, { omit, pick, nonNull, extra, plain,
+    _id = true, timestamps = true }) {
+    let types = _.reduce(attributes, (result, item, key) => {
+      switch (item.type) {
+        case String:
+          result[key] = {
+            type: GraphQLString
+          };
+          break;
+        case Boolean:
+          result[key] = {
+            type: GraphQLBoolean
+          };
+          break;
+        case Number: {
+          result[key] = {
+            type: GraphQLFloat,
+          };
+          break;
+        }
+        case Array:
+        case Mixed: {
+          result[key] = {
+            type: GraphQLJSON
+          };
+          break;
+        }
+        case ObjectId:
+        case ObjectID: {
+          result[key] = {
+            type: GraphQLID
+          };
+          break;
+        }
+        default: {
+          logger.warn('not match type: ', item.type);
+        }
+      }
+
+      if (item.required && !plain) {
+        result[key] = {
+          type: new GraphQLNonNull(result[key].type),
+        };
+      }
+
+      return result;
+    }, {});
+
+    if (_id) {
+      types._id = {
+        type: GraphQLString
+      };
+    }
+
+    if (timestamps) {
+      types.createdAt = {
+        type: GraphQLString
+      };
+      types.updatedAt = {
+        type: GraphQLString
+      };
+    }
+
+    if (nonNull && nonNull.length) {
+      nonNull.forEach((key) => {
+        if (!types[key]) {
+          logger.warn(`${key} not found`);
+          return null;
+        }
+
+        // 本身为 GraphQLNonNull;
+        if (/!$/.test(types[key].type.toString())) {
+          return null;
+        }
+
+        types[key] = {
+          type: new GraphQLNonNull(GraphQLJSON),
+        };
+        return null;
+      });
+    }
+
+    if (extra) {
+      _.assign(types, extra);
+    }
+
+    if (pick) {
+      return _.pick(types, pick);
+    }
+    else if (omit) {
+      return _.omit(types, pick);
+    }
+
+    return types;
+  }
 };
 
 module.exports = svc;
