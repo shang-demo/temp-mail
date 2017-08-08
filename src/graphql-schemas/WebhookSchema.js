@@ -76,7 +76,7 @@ let query = {
         type: new GraphQLNonNull(GraphQLString)
       },
     },
-    resolve(source, { _id }) {
+    resolve(root, { _id }) {
       return Webhook
         .findOne({
           _id,
@@ -117,7 +117,7 @@ let mutation = {
     args: {
       webhook: { type: WebhookCreateInput }
     },
-    resolve(source, { webhook }) {
+    resolve(root, { webhook }) {
       return Webhook.create(webhook);
     }
   },
@@ -128,7 +128,7 @@ let mutation = {
       _id: { type: new GraphQLNonNull(GraphQLString) },
       webhook: { type: WebhookUpdateInput }
     },
-    resolve(source, { _id, webhook }) {
+    resolve(root, { _id, webhook }) {
       return Webhook
         .update({
           _id,
