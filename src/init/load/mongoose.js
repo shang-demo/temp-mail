@@ -123,6 +123,9 @@ function exposeGlobal(opt) {
   global[opt.modelName].getDb = function getDB() {
     return opt.db;
   };
+  global[opt.modelName].getAttributes = function getDB() {
+    return opt.attributes;
+  };
 }
 
 function initModel(modelName, model, connections) {

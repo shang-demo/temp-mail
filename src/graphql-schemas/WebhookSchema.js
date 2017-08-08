@@ -11,7 +11,7 @@ const WebhookQueryType = new GraphQLObjectType({
   name: 'Webhook',
   description: 'Web  hook',
   fields: () => {
-    return UtilService.buildGraphqlType(mKoa.model.Webhook.attributes, {
+    return UtilService.buildGraphqlType(Webhook.getAttributes(), {
       extra: {
         events: {
           type: GraphQLString,

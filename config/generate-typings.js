@@ -96,7 +96,17 @@ function getErrors() {
 function getMKoa() {
   return Promise
     .try(function () {
-      return '\ndeclare let mKoa = {\n  config: require(\'config\'),\n  environment: {}\n};\n';
+      return `      
+declare let mKoa = {
+  config: require('config'),
+  environment: {},
+  graphql: {
+    wrapperPolicy: function,
+    schema: object,
+    routes: function,
+  },
+};
+`;
     });
 }
 

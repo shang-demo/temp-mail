@@ -21,7 +21,7 @@ function lift() {
       let obj = {};
 
       if (!_.isEmpty(queryFields)) {
-        if (this.graphql && this.graphql.wrapperPolicy) {
+        if (this.graphql.wrapperPolicy) {
           this.graphql.wrapperPolicy(queryFields);
         }
 
