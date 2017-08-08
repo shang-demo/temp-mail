@@ -37,7 +37,7 @@ module.exports.http = {
       }
 
       return async (ctx, next) => {
-        if (['POST', 'UPDATE', 'GET'].indexOf(ctx.method) === -1) {
+        if (['POST', 'UPDATE', 'GET', 'DELETE'].indexOf(ctx.method) === -1) {
           await next();
           return;
         }

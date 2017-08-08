@@ -21,6 +21,10 @@ function lift() {
       let obj = {};
 
       if (!_.isEmpty(queryFields)) {
+        if (this.graphql && this.graphql.wrapperPolicy) {
+          this.graphql.wrapperPolicy(queryFields);
+        }
+
         obj.query = new GraphQLObjectType({
           name: 'RootQuery',
           description: 'RootQuery',
@@ -40,14 +44,7 @@ function lift() {
         });
       }
 
-      let schema = new GraphQLSchema(obj);
-
-      this.graphqlConfig = {
-        schema,
-        graphiql: this.config.graphiql,
-      };
-
-      return undefined;
+      this.graphql.schema = new GraphQLSchema(obj);
     });
 }
 

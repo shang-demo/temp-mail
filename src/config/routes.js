@@ -1,4 +1,3 @@
-const graphqlHTTP = require('koa-graphql');
 
 module.exports.routes = {
 
@@ -16,24 +15,24 @@ module.exports.routes = {
     ctx.status = 404;
   },
 
-  // execCmd
-  'get /api/:version(v\\d+)/cmd': 'ExecuteCmdController.help',
-  'post /api/:version(v\\d+)/cmd': 'ExecuteCmdController.execCmd',
-  '/api/:version(v\\d+)/cmd/token': 'ExecuteCmdController.generateToken',
-
-  // webhook
-  'get /api/v1/webhook/event': 'WebhookController.queryEvent',
-  'get /api/v1/webhook': 'WebhookController.query',
-  'get /api/v1/webhook/:id': 'WebhookController.get',
-  'post /api/v1/webhook': 'WebhookController.create',
-  'put /api/v1/webhook/:id': 'WebhookController.update',
-  'delete /api/v1/webhook/:id': 'WebhookController.destroy',
-
   // version
-  '/version': 'ExecuteCmdController.deployVersion',
+  '/version': async function version(ctx) {
+    return ExecuteCmdService.getVersion()
+      .then((data) => {
+        ctx.body = data;
+      })
+      .catch((e) => {
+        ctx.status = 400;
+        ctx.body = e;
+      });
+  },
 
   '/': async function graphqlRoutes(...args) {
-    return graphqlHTTP(mKoa.graphqlConfig)(...args);
+    return mKoa.graphql.routes(...args);
+  },
+
+  '/graphql': async function graphqlRoutes(...args) {
+    return mKoa.graphql.routes(...args);
   },
 
   // 未找到

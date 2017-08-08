@@ -1,4 +1,6 @@
 const path = require('path');
+const jwt = require('jwt-simple');
+const fs = require('fs-extra');
 
 const helpInfo = {
   cmds: [{
@@ -171,8 +173,43 @@ function tryAutoDeploy(body) {
     });
 }
 
+let version;
+async function getVersion() {
+  if (!version) {
+    version = await fs.readFile(path.join(__dirname, '../config/version.txt'))
+      .then((buffer) => {
+        return buffer.toString();
+      })
+      .catch(() => {
+        return 'no version';
+      });
+  }
+
+  return {
+    env: process.env.NODE_ENV,
+    version,
+  };
+}
+
+function generateToken(user) {
+  let payload = {
+    id: user.id,
+    expiresAt: (new Date().getTime() + ((mKoa.config.auth.tokenExpiresIn || 7200) * 1000)),
+  };
+
+  let token = jwt.encode(payload, mKoa.config.auth.superSecret);
+
+  return {
+    token,
+    expiresIn: mKoa.config.auth.tokenExpiresIn || 7200,
+  };
+}
+
 module.exports = {
   execCmd,
   tryAutoDeploy,
   helpInfo,
-};
+  getVersion,
+  generateToken,
+}
+;

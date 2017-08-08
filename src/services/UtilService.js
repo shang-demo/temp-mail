@@ -294,7 +294,7 @@ const svc = {
     }
 
     return types;
-  }
+  },
 };
 
 module.exports = svc;

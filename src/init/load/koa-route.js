@@ -37,34 +37,16 @@ function lift() {
       pattern = key;
     }
 
-
     if (!(_.includes(allMethods, method))) {
       throw new Error(`invalid route method: ${method}`);
     }
 
     if (_.isFunction(action)) {
       router[method](...[pattern].concat(action));
-      return;
     }
-
-    let actionParts = action.split('.');
-    let controllerName = actionParts[0];
-    let controller = this.controllers[controllerName];
-
-    if (!controller) {
-      throw new Error(`undefined controller: ${controllerName}`);
+    else {
+      throw new Error(`invalid route key: ${key}`);
     }
-
-    let actionMethodName = actionParts[1];
-    let actionMethod = controller[actionMethodName].bind(controller);
-
-    if (!actionMethod) {
-      throw new Error(`undefined action method: ${action}`);
-    }
-
-    let policies = (this.controllerActionPolicies && this.controllerActionPolicies[`${controllerName}.${actionMethodName}`]) || [];
-
-    router[method](...[pattern].concat(policies).concat(actionMethod));
   });
 
   this.app.use(router.routes());
@@ -121,6 +103,7 @@ function lift() {
     }
 
     logger.debug(`Listening on: ${bind}`);
+    logger.debug(`graphql listening on: ${bind}/graphql`);
   }
 }
 

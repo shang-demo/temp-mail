@@ -2,29 +2,17 @@ function isApplicationError(e) {
   return e instanceof Errors;
 }
 
-function wrapError(e, otherError, errStatus) {
-  logger.warn(e);
-
+function wrapError(e) {
   if (isApplicationError(e)) {
-    this.body = e;
-    this.status = errStatus || 400;
-    return;
+    return e;
   }
 
-  if (otherError) {
-    this.body = otherError;
-    this.status = otherError.status || 400;
-    return;
-  }
-
-  this.body = new Errors.UnknownError({
+  return new Errors.UnknownError({
     originErrMsg: e && e.message,
   });
-  this.status = 400;
 }
 
-module.exports = async (ctx, next) => {
-  ctx.isApplicationError = isApplicationError;
-  ctx.wrapError = wrapError;
-  await next();
+module.exports = {
+  type: 'catch',
+  resolve: wrapError,
 };

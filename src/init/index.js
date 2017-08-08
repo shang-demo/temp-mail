@@ -24,6 +24,8 @@ class My extends EventEmitter {
     this.config = {};
     this.model = {};
 
+    this.graphql = {};
+
     // 设置 alias
     if (this.options.alias) {
       global[this.options.alias] = this;
