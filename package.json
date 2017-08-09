@@ -24,7 +24,7 @@
     "kcors": "^2.2.1",
     "koa": "^2.3.0",
     "koa-bodyparser": "^4.2.0",
-    "koa-graphql": "^0.7.1",
+    "koa-graphql": "shang-package/koa-graphql#master",
     "koa-router": "^7.2.1",
     "lodash": "^4.17.4",
     "mongodb-uri": "^0.9.7",
