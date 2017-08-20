@@ -17,8 +17,8 @@ const WebhookQueryType = new GraphQLObjectType({
           type: GraphQLString,
           args: {
             separator: {
-              type: GraphQLString
-            }
+              type: GraphQLString,
+            },
           },
           resolve(hook, { separator }) {
             if (!separator) {
@@ -27,7 +27,7 @@ const WebhookQueryType = new GraphQLObjectType({
             return (hook.events || []).join(separator);
           },
         },
-      }
+      },
     });
   },
 });
@@ -42,7 +42,7 @@ const WebhookCreateInput = new GraphQLInputObjectType({
         events: { type: new GraphQLList(GraphQLString) },
       },
     });
-  }
+  },
 });
 
 const WebhookUpdateInput = new GraphQLInputObjectType({
@@ -56,7 +56,7 @@ const WebhookUpdateInput = new GraphQLInputObjectType({
       },
       plain: true,
     });
-  }
+  },
 });
 
 let query = {
@@ -66,14 +66,14 @@ let query = {
       return _.map(HookService.events, (value) => {
         return value;
       });
-    }
+    },
   },
   webhook: {
     type: WebhookQueryType,
     description: '根据id查询单个webhook',
     args: {
       _id: {
-        type: new GraphQLNonNull(GraphQLString)
+        type: new GraphQLNonNull(GraphQLString),
       },
     },
     resolve(root, { _id }) {
@@ -82,14 +82,14 @@ let query = {
           _id,
         })
         .lean();
-    }
+    },
   },
   webhooks: {
     type: new GraphQLList(WebhookQueryType),
     description: '查询全部webhook列表',
     args: {
       search: {
-        type: GraphQLString
+        type: GraphQLString,
       },
     },
     resolve(root, { search }) {
@@ -106,8 +106,8 @@ let query = {
         };
       }
       return Webhook.find(condition).lean();
-    }
-  }
+    },
+  },
 };
 
 let mutation = {
@@ -115,31 +115,31 @@ let mutation = {
     type: WebhookQueryType,
     description: '添加webhook',
     args: {
-      webhook: { type: WebhookCreateInput }
+      webhook: { type: WebhookCreateInput },
     },
     resolve(root, { webhook }) {
       return Webhook.create(webhook);
-    }
+    },
   },
   updateWebhook: {
     type: WebhookQueryType,
     description: '更新webhook',
     args: {
       _id: { type: new GraphQLNonNull(GraphQLString) },
-      webhook: { type: WebhookUpdateInput }
+      webhook: { type: WebhookUpdateInput },
     },
     resolve(root, { _id, webhook }) {
       return Webhook
         .update({
           _id,
         }, webhook);
-    }
+    },
   },
   removeWebhook: {
     type: GraphQLString,
     description: '删除 webhook',
     args: {
-      _id: { type: new GraphQLNonNull(GraphQLString) }
+      _id: { type: new GraphQLNonNull(GraphQLString) },
     },
     resolve(root, { _id }) {
       return Webhook.remove({ _id })
@@ -147,7 +147,7 @@ let mutation = {
           return _id;
         });
     },
-  }
+  },
 };
 
 module.exports = {

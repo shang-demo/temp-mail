@@ -23,7 +23,7 @@ module.exports = {
     'brace-style': ['error', 'stroustrup'],
     'comma-dangle': ['error', {
       arrays: 'only-multiline',
-      objects: 'only-multiline',
+      objects: 'always-multiline',
       imports: 'only-multiline',
       exports: 'only-multiline',
       functions: 'never',

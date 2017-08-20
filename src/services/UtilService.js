@@ -206,12 +206,12 @@ const svc = {
       switch (item.type) {
         case String:
           result[key] = {
-            type: GraphQLString
+            type: GraphQLString,
           };
           break;
         case Boolean:
           result[key] = {
-            type: GraphQLBoolean
+            type: GraphQLBoolean,
           };
           break;
         case Number: {
@@ -223,14 +223,14 @@ const svc = {
         case Array:
         case Mixed: {
           result[key] = {
-            type: GraphQLJSON
+            type: GraphQLJSON,
           };
           break;
         }
         case ObjectId:
         case ObjectID: {
           result[key] = {
-            type: GraphQLID
+            type: GraphQLID,
           };
           break;
         }
@@ -250,16 +250,16 @@ const svc = {
 
     if (_id) {
       types._id = {
-        type: GraphQLString
+        type: GraphQLString,
       };
     }
 
     if (timestamps) {
       types.createdAt = {
-        type: GraphQLString
+        type: GraphQLString,
       };
       types.updatedAt = {
-        type: GraphQLString
+        type: GraphQLString,
       };
     }
 

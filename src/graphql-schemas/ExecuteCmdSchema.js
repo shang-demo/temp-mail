@@ -30,7 +30,7 @@ const CmdInput = new GraphQLInputObjectType({
       },
       detail: {
         type: GraphQLString,
-      }
+      },
     };
   },
 });
@@ -48,7 +48,7 @@ const executeCmdInput = new GraphQLInputObjectType({
       },
       email: {
         type: GraphQLString,
-      }
+      },
     };
   },
 });
@@ -79,7 +79,7 @@ const TokenType = new GraphQLObjectType({
       },
       expiresIn: {
         type: GraphQLFloat,
-      }
+      },
     };
   },
 });
@@ -111,7 +111,7 @@ let query = {
     resolve() {
       return ExecuteCmdService.helpInfo;
     },
-  }
+  },
 };
 
 let mutation = {
@@ -119,7 +119,7 @@ let mutation = {
     type: GraphQLString,
     description: '执行命令',
     args: {
-      cmd: { type: executeCmdInput }
+      cmd: { type: executeCmdInput },
     },
     resolve(root, { cmd }) {
       return ExecuteCmdService.execCmd(cmd);
@@ -129,7 +129,7 @@ let mutation = {
     type: TokenType,
     description: '生成Token',
     args: {
-      data: { type: TokenInput }
+      data: { type: TokenInput },
     },
     resolve(root, { data }) {
       return ExecuteCmdService.generateToken(data);
