@@ -19,6 +19,7 @@
     "chalk": "^2.0.1",
     "fs-extra": "^4.0.1",
     "graphql": "^0.10.5",
+    "graphql-iso-date": "^3.2.0",
     "graphql-type-json": "^0.1.4",
     "jwt-simple": "^0.5.1",
     "kcors": "^2.2.1",

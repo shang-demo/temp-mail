@@ -8,6 +8,8 @@ const {
   GraphQLFloat,
 } = require('graphql');
 
+const { GraphQLDateTime } = require('graphql-iso-date');
+
 const GraphQLJSON = require('graphql-type-json');
 
 const svc = {
@@ -201,7 +203,7 @@ const svc = {
    * @param plain 默认全部属性按照required来判断, 设置true则为可为空
    */
   buildGraphqlType(attributes, { omit, pick, nonNull, extra, plain,
-    _id = true, timestamps = true }) {
+    _id = true, timestamps = true } = {}) {
     let types = _.reduce(attributes, (result, item, key) => {
       switch (item.type) {
         case String:
@@ -231,6 +233,12 @@ const svc = {
         case ObjectID: {
           result[key] = {
             type: GraphQLID,
+          };
+          break;
+        }
+        case Date: {
+          result[key] = {
+            type: GraphQLDateTime,
           };
           break;
         }
