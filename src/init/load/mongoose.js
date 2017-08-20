@@ -99,6 +99,12 @@ function define(db, modelName, opt, config) {
     });
   }
 
+  if (config.statics && _.isPlainObject(config.statics)) {
+    _.forEach(config.statics, (value, key) => {
+      modelNameSchema.static(key, value);
+    });
+  }
+
   let modelNameModel = db.model(modelName, modelNameSchema);
 
   return {
