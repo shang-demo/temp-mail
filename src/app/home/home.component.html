@@ -1,12 +1,18 @@
 <div>
-  <button md-raised-button>hash={{location.hash}}</button>
-  <button  md-raised-button [routerLink]=" [''] "
+  <button nz-button>hash={{location.hash}}</button>
+  <button nz-button [nzType]="'primary'"
+          [routerLink]=" [''] "
           routerLinkActive="active"
-           [routerLinkActiveOptions]="{exact: true}"
-  >index</button>
+          [routerLinkActiveOptions]="{exact: true}"
+  >
+    index2
+  </button>
 
-  <button  md-raised-button [routerLink]=" ['/home'] "
-           routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+  <button nz-button
+          [nzType]="'primary'"
+          [routerLink]=" ['/home'] "
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{exact: true}">
     home
   </button>
 

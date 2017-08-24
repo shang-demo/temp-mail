@@ -1,10 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { NgModule, ApplicationRef } from '@angular/core';
 import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import { SlimLoadingBarModule } from 'ng2-slim-loading-bar';
+import { NgZorroAntdModule } from 'ng-zorro-antd';
 
 /*
  * Platform and Environment providers/directives/pipes
@@ -18,7 +20,6 @@ import { AppState, InternalStateType } from './app.service';
 import { HomeComponent } from './home';
 
 import '../styles/styles.scss';
-import { MdButtonModule } from '@angular/material';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -48,7 +49,8 @@ type StoreType = {
     BrowserModule,
     FormsModule,
     HttpModule,
-    MdButtonModule,
+    BrowserAnimationsModule,
+    NgZorroAntdModule.forRoot(),
     SlimLoadingBarModule.forRoot(),
     RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules }),
   ],
