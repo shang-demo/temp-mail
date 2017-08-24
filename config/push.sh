@@ -3,8 +3,17 @@
 trap "exit 1" TERM
 export TOP_PID=$$
 
+projectDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )"
+
+function resetDir() {
+  cd ${projectDir}
+}
+
 function getConfig() {
   configName=${1};
+  configDefaultValue=${2-""}
+  configFile=${3-"config/push.config.json"};
+
   if [ -z "${configName}" ]
   then
     echo "no config name found";
@@ -13,7 +22,16 @@ function getConfig() {
     exit 1;
   fi
 
-  value=`cat package.json | jq -r ".${configName}"`;
+  if [ ! -f "${projectDir}/config/push.config.json" ]
+  then
+    echo "${projectDir}/config/push.config.json not found";
+    # 退出不再执行
+    kill -s TERM ${TOP_PID}
+    exit 1;
+  fi
+
+
+  value=`cat ${projectDir}/${configFile} | jq -r ".${configName}"`;
   if [ -z "${value}" -o ${value} = "null" ]
   then
     value=${2}
@@ -27,8 +45,8 @@ function currentBranch() {
 }
 
 function pushDeploy() {
-  npm run build:aot:prod
-  cp package.json dist/
+#  npm run build:aot:prod
+#  cp package.json dist/
   cd dist
 
 	push deploy
@@ -46,7 +64,7 @@ function initGit() {
   then
     if [ -z "${url}" ]
     then
-      echo "set push url at package.json"
+      echo "set push url at config/push.config.json"
 
       kill -s TERM ${TOP_PID}
       exit 1
@@ -61,20 +79,28 @@ function initGit() {
 function push() {
   env=${1:-dev};
 
-  pushUrl=$(getConfig "push.${env}.url")
-	pushRemote=$(getConfig "push.${env}.remote" "origin")
+  pushUrl=$(getConfig "${env}.url")
+	pushRemote=$(getConfig "${env}.remote" "origin")
+
+	initGit ${pushRemote} ${pushUrl}
+
   currentBranch=$(currentBranch)
-	pushBranch=$(getConfig "push.${env}.branch")
+
+  if [ ${currentBranch} = "HEAD" ]
+  then
+    currentBranch="master"
+  fi
+
+	pushBranch=$(getConfig "${env}.branch")
 
 	if [ ${pushBranch} = "__package_name__" ]
 	then
-	  pushBranch=$(getConfig "name")
+	  pushBranch=$(getConfig "name" "" "package.json")
 	elif [ -z "${pushBranch}" -o ${pushBranch} = "null" ]
 	then
 	  pushBranch=${currentBranch}
 	fi
 
-  initGit ${pushRemote} ${pushUrl}
 
   if [ ${env} = "deploy" ]
   then
