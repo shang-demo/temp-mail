@@ -91,7 +91,7 @@ function initProject() {
 
 	git add -A;
 	git commit -m "init project";
-	yarnpkg
+	cnpm i
 }
 
 function checkDependence() {
