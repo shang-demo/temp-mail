@@ -3,9 +3,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { NgModule, ApplicationRef } from '@angular/core';
-import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
 import { RouterModule, PreloadAllModules } from '@angular/router';
-import { SlimLoadingBarModule } from 'ng2-slim-loading-bar';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+
+import { NgProgressModule, NgProgressInterceptor } from 'ngx-progressbar';
+import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 
 /*
@@ -50,9 +52,10 @@ type StoreType = {
     FormsModule,
     HttpModule,
     BrowserAnimationsModule,
-    NgZorroAntdModule.forRoot(),
-    SlimLoadingBarModule.forRoot(),
     RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules }),
+    HttpClientModule,
+    NgProgressModule,
+    NgZorroAntdModule.forRoot(),
   ],
   /**
    * Expose our Services and Providers into Angular's dependency injection.
@@ -60,6 +63,11 @@ type StoreType = {
   providers: [
     ENV_PROVIDERS,
     APP_PROVIDERS,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: NgProgressInterceptor,
+      multi: true,
+    },
   ],
 })
 export class AppModule {

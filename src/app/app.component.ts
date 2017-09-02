@@ -3,11 +3,12 @@
  */
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { AppState } from './app.service';
-import { SlimLoadingBarService } from 'ng2-slim-loading-bar';
 import {
   NavigationCancel, NavigationEnd,
   NavigationError, NavigationStart, Router,
-}from '@angular/router';
+} from '@angular/router';
+import { NgProgressService } from 'ngx-progressbar';
+
 
 /**
  * App Component
@@ -26,23 +27,23 @@ export class AppComponent implements OnInit, OnDestroy {
   private sub: any;
 
   constructor(public appState: AppState,
-              private slimLoader: SlimLoadingBarService,
-              private router: Router) {
+              private router: Router,
+              private ngProgressService: NgProgressService) {
 
     this.sub = this.router.events
       .subscribe(
         (event) => {
           if (event instanceof NavigationStart) {
-            this.slimLoader.start();
+            this.ngProgressService.begin();
           } else if (event instanceof NavigationEnd ||
             event instanceof NavigationCancel ||
             event instanceof NavigationError) {
-            this.slimLoader.complete();
+            this.ngProgressService.end();
           }
         },
         (error: any) => {
           console.warn(error);
-          this.slimLoader.complete();
+          this.ngProgressService.end();
         });
   }
 

@@ -87,7 +87,7 @@
     "http-server": "^0.10.0",
     "ie-shim": "^0.1.0",
     "ng-zorro-antd": "^0.5.0-rc.2",
-    "ng2-slim-loading-bar": "^4.0.0",
+    "ngx-progressbar": "github:shang-package/ngx-progressbar#package",
     "reflect-metadata": "^0.1.10",
     "rxjs": "~5.4.3",
     "zone.js": "0.8.17"
