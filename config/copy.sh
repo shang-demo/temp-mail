@@ -76,6 +76,7 @@ function initProject() {
   # change merge branch
 	gsed -i "s|__template_remote__|${mergeRemote}|g" Makefile
 	gsed -i "s|__template_branch__|${mergeBranch}|g" Makefile
+	gsed -i "s|\"name\": \"client-template\"|\"name\": \"${projectName}\"|g" .angular-cli.json
   # change project name and push remote
 	cat package.json | jq ".name=\"${projectName}\" | .version=\"0.0.1\"" > __package__.json
 	rm package.json
