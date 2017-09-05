@@ -9,6 +9,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgProgressModule, NgProgressInterceptor } from 'ngx-progressbar';
 import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
+import { ApolloModule } from 'apollo-angular';
 
 /*
  * Platform and Environment providers/directives/pipes
@@ -22,6 +23,8 @@ import { AppState, InternalStateType } from './app.service';
 import { HomeComponent } from './home';
 
 import '../styles/styles.scss';
+import { provideClient } from './utils/apollo-client/provide-client';
+import { HomeService } from './home/home.service';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -49,6 +52,7 @@ type StoreType = {
    */
   imports: [
     BrowserModule,
+    ApolloModule.forRoot(provideClient),
     FormsModule,
     HttpModule,
     BrowserAnimationsModule,
@@ -68,6 +72,7 @@ type StoreType = {
       useClass: NgProgressInterceptor,
       multi: true,
     },
+    HomeService,
   ],
 })
 export class AppModule {
