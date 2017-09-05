@@ -9,7 +9,6 @@ import {
 } from '@angular/router';
 import { NgProgressService } from 'ngx-progressbar';
 
-
 /**
  * App Component
  * Top Level Component
