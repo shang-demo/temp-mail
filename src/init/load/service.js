@@ -13,7 +13,7 @@ function lift() {
   return filePathOneLayer(path.join(this.projectPath, 'services'))
     .map((serviceFile) => {
       services[serviceFile.basename] = require(serviceFile.path);
-      return undefined;
+      return null;
     })
     .then(() => {
       return _.merge(global, services);
