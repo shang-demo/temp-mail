@@ -10,6 +10,7 @@ function lift() {
       projectPath: this.projectPath,
       config: configPath,
       envConfig: path.join(configPath, 'env'),
+      baseConfigPath: path.join(configPath, 'env/base'),
     },
   };
 
@@ -27,7 +28,7 @@ function lift() {
     .then(() => {
       let envPath = path.join(this.config.paths.envConfig, this.environment);
       try {
-        return _.merge(this.config, require(envPath));
+        return _.merge(this.config, require(this.config.paths.baseConfigPath), require(envPath));
       }
       catch (e) {
         return Promise.reject(e);
