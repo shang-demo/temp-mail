@@ -1,3 +1,5 @@
+require('./load/error-event');
+
 const _ = require('lodash');
 const EventEmitter = require('events');
 const path = require('path');
