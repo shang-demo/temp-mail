@@ -3,10 +3,20 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { NgModule, ApplicationRef } from '@angular/core';
+
+import {
+  removeNgStyles,
+  createNewHosts,
+  createInputTransfer
+} from '@angularclass/hmr';
+
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { NgProgressModule, NgProgressInterceptor } from 'ngx-progressbar';
+
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
 import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
 import { NgZorroAntdModule } from 'ng-zorro-antd';
 import { ApolloModule } from 'apollo-angular';
@@ -42,7 +52,7 @@ interface StoreType {
  * `AppModule` is the main entry point into Angular2's bootstraping process
  */
 @NgModule({
-  bootstrap: [AppComponent],
+  bootstrap: [ AppComponent ],
   declarations: [
     AppComponent,
     HomeComponent,
@@ -53,10 +63,13 @@ interface StoreType {
   imports: [
     BrowserModule,
     ApolloModule.forRoot(provideClient),
+    BrowserAnimationsModule,
     FormsModule,
     HttpModule,
-    BrowserAnimationsModule,
-    RouterModule.forRoot(ROUTES, { useHash: true, preloadingStrategy: PreloadAllModules }),
+    RouterModule.forRoot(ROUTES, {
+      useHash: Boolean(history.pushState) === false,
+      preloadingStrategy: PreloadAllModules
+    }),
     HttpClientModule,
     NgProgressModule,
     NgZorroAntdModule.forRoot(),
@@ -94,7 +107,7 @@ export class AppModule {
      * Set input values
      */
     if ('restoreInputValues' in store) {
-      const restoreInputValues = store.restoreInputValues;
+      let restoreInputValues = store.restoreInputValues;
       setTimeout(restoreInputValues);
     }
 
@@ -117,7 +130,7 @@ export class AppModule {
     /**
      * Save input values
      */
-    store.restoreInputValues = createInputTransfer();
+    store.restoreInputValues  = createInputTransfer();
     /**
      * Remove styles
      */
