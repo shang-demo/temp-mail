@@ -22,7 +22,9 @@ function getDb(connection, connections) {
   let uri = getMongodbUri(connections[connection]);
   logger.debug('start connect mongodb: ', uri);
 
-  dbList[connection] = mongoose.createConnection(uri);
+  dbList[connection] = mongoose.createConnection(uri, {
+    useMongoClient: true,
+  });
   return dbList[connection];
 }
 

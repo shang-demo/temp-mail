@@ -1,6 +1,6 @@
-const MONGODB_DATABASE = 'leancloud';
-const MONGODB_USERNAME = 'leancloudUser';
-const MONGODB_PASSWORD = process.env.MONGODB_PASSWORD;
+const MONGODB_DATABASE = 'noName';
+const MONGODB_USERNAME = 'noNameUser';
+const MONGODB_PASSWORD = process.env.MONGODB_PASSWORD || 'WhvyGd6tH4VpL44k';
 
 module.exports = {
   log: {
