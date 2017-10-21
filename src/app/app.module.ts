@@ -10,6 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { NgProgressModule, NgProgressInterceptor } from 'ngx-progressbar';
 import { ApolloModule } from 'apollo-angular';
+import { MatButtonModule } from '@angular/material';
 
 /*
  * Platform and Environment providers/directives/pipes
@@ -52,16 +53,18 @@ interface StoreType {
    */
   imports: [
     BrowserModule,
-    ApolloModule.forRoot(provideClient),
     BrowserAnimationsModule,
     FormsModule,
     HttpModule,
+    HttpClientModule,
     RouterModule.forRoot(ROUTES, {
       useHash: true,
       preloadingStrategy: PreloadAllModules
     }),
-    HttpClientModule,
+    ApolloModule.forRoot(provideClient),
     NgProgressModule,
+
+    MatButtonModule,
   ],
   /**
    * Expose our Services and Providers into Angular's dependency injection.

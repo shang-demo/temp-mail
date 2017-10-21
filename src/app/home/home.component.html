@@ -1,13 +1,16 @@
 <div>
-  <button>hash={{ location.hash }}</button>
-  <button [routerLink]=" [''] "
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{exact: true}"
+  <button mat-raised-button>hash={{ location.hash }}</button>
+  <button
+    mat-raised-button color="primary"
+    [routerLink]=" [''] "
+    routerLinkActive="active"
+    [routerLinkActiveOptions]="{exact: true}"
   >
     index
   </button>
 
   <button
+    mat-raised-button color="accent"
     [routerLink]=" ['/home'] "
     routerLinkActive="active"
     [routerLinkActiveOptions]="{exact: true}">
