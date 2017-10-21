@@ -45,8 +45,8 @@ function currentBranch() {
 }
 
 function pushDeploy() {
-#  npm run build:aot:prod
-#  cp package.json dist/
+  npm run build:aot:prod
+  cp package.json dist/
   cd dist
 
 	push deploy

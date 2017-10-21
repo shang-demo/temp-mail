@@ -72,8 +72,8 @@ module.exports = function (options) {
     entry: {
 
       'polyfills': './src/polyfills.browser.ts',
-      'main':      AOT ? './src/main.browser.aot.ts' :
-                  './src/main.browser.ts'
+      'main': AOT ? './src/main.browser.aot.ts' :
+        './src/main.browser.ts'
 
     },
 
@@ -207,8 +207,13 @@ module.exports = function (options) {
           test: /\.ts$/,
           loader: 'string-replace-loader',
           query: {
-            search: 'SERVER_URL',
-            replace: isProd ? METADATA.SERVER_URL.prod : METADATA.SERVER_URL.default,
+            multiple: [
+              {
+                search: 'SERVER_URL',
+                replace: isProd ? METADATA.SERVER_URL.prod : METADATA.SERVER_URL.default,
+              },
+            ]
+
           }
         }
 
@@ -224,7 +229,7 @@ module.exports = function (options) {
     plugins: [
       // Remove all locale files in moment with the IgnorePlugin if you don't need them
       // new IgnorePlugin(/^\.\/locale$/, /moment$/),
-      
+
       // Use for DLLs
       // new AssetsPlugin({
       //   path: helpers.root('dist'),
@@ -299,10 +304,10 @@ module.exports = function (options) {
        * See: https://www.npmjs.com/package/copy-webpack-plugin
        */
       new CopyWebpackPlugin([
-        { from: 'src/assets', to: 'assets' },
-        { from: 'src/meta'}
-      ],
-        isProd ? { ignore: [ 'mock-data/**/*' ] } : undefined
+          { from: 'src/assets', to: 'assets' },
+          { from: 'src/meta' }
+        ],
+        isProd ? { ignore: ['mock-data/**/*'] } : undefined
       ),
 
       /*
@@ -336,14 +341,14 @@ module.exports = function (options) {
         template: 'src/index.html',
         title: isProd ? METADATA.title.prod : METADATA.title.default,
         chunksSortMode: function (a, b) {
-          const entryPoints = ["inline","polyfills","sw-register","styles","vendor","main"];
+          const entryPoints = ['inline', 'polyfills', 'sw-register', 'styles', 'vendor', 'main'];
           return entryPoints.indexOf(a.names[0]) - entryPoints.indexOf(b.names[0]);
         },
         metadata: METADATA,
         inject: 'body'
       }),
 
-       /**
+      /**
        * Plugin: ScriptExtHtmlWebpackPlugin
        * Description: Enhances html-webpack-plugin functionality
        * with different deployment options for your scripts including:
@@ -427,4 +432,4 @@ module.exports = function (options) {
     }
 
   };
-}
+};

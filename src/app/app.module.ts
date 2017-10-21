@@ -1,24 +1,14 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { NgModule, ApplicationRef } from '@angular/core';
 
-import {
-  removeNgStyles,
-  createNewHosts,
-  createInputTransfer
-} from '@angularclass/hmr';
-
+import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
 import { RouterModule, PreloadAllModules } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-
-import { NgProgressModule, NgProgressInterceptor } from 'ngx-progressbar';
-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { removeNgStyles, createNewHosts, createInputTransfer } from '@angularclass/hmr';
-import { NgZorroAntdModule } from 'ng-zorro-antd';
+import { NgProgressModule, NgProgressInterceptor } from 'ngx-progressbar';
 import { ApolloModule } from 'apollo-angular';
 
 /*
@@ -67,12 +57,11 @@ interface StoreType {
     FormsModule,
     HttpModule,
     RouterModule.forRoot(ROUTES, {
-      useHash: Boolean(history.pushState) === false,
+      useHash: true,
       preloadingStrategy: PreloadAllModules
     }),
     HttpClientModule,
     NgProgressModule,
-    NgZorroAntdModule.forRoot(),
   ],
   /**
    * Expose our Services and Providers into Angular's dependency injection.
