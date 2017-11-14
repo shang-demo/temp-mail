@@ -43,13 +43,16 @@ function initProject() {
 		exitAll
 	fi
 
-	mkdir -p ${cpDir};
-	cd ${cpDir};
-	git init;
-	git remote add ${mergeRemote} ${mergeUrl};
-	git remote -v;
-	git fetch ${mergeRemote} ${mergeBranch};
-	git checkout -b master remotes/${mergeRemote}/${mergeBranch};
+	mkdir -p ${cpDir}
+	cd ${cpDir}
+	git init
+	git remote add ${mergeRemote} ${mergeUrl}
+	git remote -v
+  # 先pull最新代码
+	git fetch --depth=1 ${mergeRemote} ${mergeBranch}
+  # 后台补全历史记录
+	git fetch template v3 --unshallow >/dev/null 2>&1 &
+	git checkout -b master remotes/${mergeRemote}/${mergeBranch}
 
   # change merge branch
 	gsed -i "s|__template_remote__|${mergeRemote}|g" Makefile
@@ -67,8 +70,8 @@ function initProject() {
 
 	echo "# ${projectName}" > README.md
 
-	git add -A;
-	git commit -m "init project";
+	git add -A
+	git commit -m "init project"
 	yarnpkg
 }
 
