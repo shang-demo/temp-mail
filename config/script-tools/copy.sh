@@ -48,7 +48,7 @@ function initProject() {
 	git init;
 	git remote add ${mergeRemote} ${mergeUrl};
 	git remote -v;
-	git fetch --depth=1 ${mergeRemote} ${mergeBranch};
+	git fetch ${mergeRemote} ${mergeBranch};
 	git checkout -b master remotes/${mergeRemote}/${mergeBranch};
 
   # change merge branch
