@@ -22,11 +22,11 @@ merge:
 	git fetch __template_remote__ __template_branch__
 	git merge remotes/__template_remote__/__template_branch__
 push:
-	@ sh config/push.sh
+	@ bash config/script-tools/push-git.sh
 deploy:
-	@ sh config/push.sh deploy $(e)
+	@ bash config/script-tools/push-git.sh prod $(e)
 copy:
-	@ sh config/copy.sh $(d)
+	@ bash config/script-tools/copy.sh $(d)
 rsync:
 	cp ./package.json ./production
 	gsed -i 's/"start": ".*/"start": "PORT=1337 NODE_ENV=production pm2 start .\/index.js --name template:1337",/g' ./production/package.json

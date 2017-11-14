@@ -4,7 +4,7 @@
     "remote": "template",
     "branch": "v3"
   },
-  "deploy": {
+  "prod": {
     "url": "git@gitlab.com:demoshang/server-projects.git",
     "remote": "prod",
     "branch": "__package_name__"
