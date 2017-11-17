@@ -28,4 +28,4 @@ ADD . /app
 
 EXPOSE 3000
 
-CMD ["npm", "run", "headless"]
+CMD ["npm", "run", "start"]

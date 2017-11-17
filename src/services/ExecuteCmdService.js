@@ -2,6 +2,17 @@ const path = require('path');
 const jwt = require('jwt-simple');
 const fs = require('fs-extra');
 
+let packageJson;
+try {
+  /* eslint-disable global-require */
+  // eslint-disable-next-line import/no-unresolved
+  packageJson = require('../package.json');
+}
+catch (e) {
+  // eslint-disable-next-line global-require
+  packageJson = require('../../package.json');
+}
+
 const helpInfo = {
   cmds: [{
     name: 'update',
@@ -174,6 +185,7 @@ function tryAutoDeploy(body) {
 }
 
 let version;
+
 async function getVersion() {
   if (!version) {
     version = await fs.readFile(path.join(__dirname, '../config/version.txt'))
@@ -187,6 +199,7 @@ async function getVersion() {
 
   return {
     env: process.env.NODE_ENV,
+    name: packageJson.name,
     version,
   };
 }

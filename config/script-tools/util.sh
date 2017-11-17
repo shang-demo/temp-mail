@@ -80,7 +80,7 @@ function _dockerConfig() {
 
   if [ -d ${envDockerDir} ]
   then
-    cp -r ${envDockerDir} ./production
+    cp ${envDockerDir}/* ./production
   else
     echo "no ${nodeEnv} Dockerfile dir, skip"
   fi

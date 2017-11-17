@@ -25,6 +25,10 @@ push:
 	@ bash config/script-tools/push-git.sh
 deploy:
 	@ bash config/script-tools/push-git.sh prod $(e)
+deploy-now:
+	@ bash config/script-tools/deploy-now.sh
+alias-now:
+	@ bash config/script-tools/alias-now.sh
 copy:
 	@ bash config/script-tools/copy.sh $(d)
 rsync:
