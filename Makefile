@@ -29,6 +29,8 @@ deploy-now:
 	@ bash config/script-tools/deploy-now.sh
 alias-now:
 	@ bash config/script-tools/alias-now.sh
+now:
+	@ echo "source config/script-tools/n.sh"
 copy:
 	@ bash config/script-tools/copy.sh $(d)
 rsync:

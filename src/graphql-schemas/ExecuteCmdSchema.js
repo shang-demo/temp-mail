@@ -62,6 +62,9 @@ const VersionType = new GraphQLObjectType({
       env: {
         type: GraphQLString,
       },
+      name: {
+        type: GraphQLString,
+      },
       version: {
         type: GraphQLString,
       },

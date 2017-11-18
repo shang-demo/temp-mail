@@ -5,8 +5,29 @@ projectDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd ../.. && pwd )"
 projectName=$( cat ${projectDir}/package.json | jq -r '.name' )
 
 
-# 载入依赖
 cd ${scriptDir}
+
+function sourcePrivateEnv() {
+   local privateEnv=$( ls -a \
+   | grep -E "private-.*\.sh" \
+   | grep -v "private-env.default.sh")
+
+   echo "privateEnv:"${privateEnv}
+
+  declare -a arr=(${privateEnv})
+
+  for word in ${arr[@]}
+  do
+      source ${word}
+  done
+
+  echo "sourcePrivateEnv: "${nowAppend}
+}
+
+# 先载入私有环境
+sourcePrivateEnv
+
+# 载入依赖
 source constants.sh
 source util.sh
 source build.sh

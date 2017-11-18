@@ -57,4 +57,5 @@ src/views/*
 production/
 static/
 deploy/
-package-lock.json
+config/script-tools/private-*.sh
+!config/script-tools/private-env.default.sh

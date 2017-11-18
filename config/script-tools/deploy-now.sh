@@ -4,9 +4,29 @@ scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 projectDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd ../.. && pwd )"
 projectName=$( cat ${projectDir}/package.json | jq -r '.name' )
 
+cd ${scriptDir}
+
+function sourcePrivateEnv() {
+   local privateEnv=$( ls -a \
+   | grep -E "private-.*\.sh" \
+   | grep -v "private-env.default.sh")
+
+   echo "privateEnv:"${privateEnv}
+
+  declare -a arr=(${privateEnv})
+
+  for word in ${arr[@]}
+  do
+      source ${word}
+  done
+
+  echo "sourcePrivateEnv: "${nowAppend}
+}
+
+# 先载入私有环境
+sourcePrivateEnv
 
 # 载入依赖
-cd ${scriptDir}
 source constants.sh
 source util.sh
 source build.sh
@@ -14,6 +34,7 @@ source build.sh
 function resetDir() {
   cd ${projectDir}
 }
+
 
 function getDeployments() {
   echo $(curl --request GET \
@@ -49,8 +70,9 @@ function deploy() {
   cd production
   gsed -i 's/"start": ".*/"start": "PORT=1337 NODE_ENV=now node .\/index.js",/g' package.json
 
-  now --public --npm -t ${nowToken}
+  now --public -t ${nowToken} ${nowAppend}
 }
+
 
 deleteOldVersion
 deploy
