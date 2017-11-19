@@ -59,7 +59,8 @@ function deleteOldVersion() {
   done
 }
 
-function deploy() {
+
+function build() {
   local nodeEnv=${1:-now}
 
   local envDockerDir=${projectDir}/${DockerfilePath}/${nodeEnv}
@@ -69,10 +70,24 @@ function deploy() {
   resetDir
   cd production
   gsed -i 's/"start": ".*/"start": "PORT=1337 NODE_ENV=now node .\/index.js",/g' package.json
-
+}
+function deploy() {
+  echo "now --public -t ${nowToken} ${nowAppend}"
   now --public -t ${nowToken} ${nowAppend}
 }
 
 
-deleteOldVersion
-deploy
+if [ -z "$*" ]
+then
+  deleteOldVersion
+  build
+  deploy
+elif [ "$1" = "build" ]
+then
+  build
+elif [ "$1" = "delete-old" ]
+then
+  deleteOldVersion
+fi
+
+

@@ -25,6 +25,10 @@ push:
 	@ bash config/script-tools/push-git.sh
 deploy:
 	@ bash config/script-tools/push-git.sh prod $(e)
+delete-old-now:
+	@ bash config/script-tools/deploy-now.sh delete-old
+build-now:
+	@ bash config/script-tools/deploy-now.sh build
 deploy-now:
 	@ bash config/script-tools/deploy-now.sh
 alias-now:
