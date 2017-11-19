@@ -21,7 +21,7 @@ module.exports = {
       database: MONGODB_DATABASE,
     },
   },
-  port: process.env.LEANCLOUD_APP_PORT || 8080,
+  port: process.env.PORT || 3000,
   graphql: {
     graphiql: true,
   },
