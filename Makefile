@@ -1,4 +1,11 @@
-.PHONY: all test clean static
+ifeq (now,$(firstword $(MAKECMDGOALS)))
+  # use the rest as arguments for "run"
+  RUN_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+  # ...and turn them into do-nothing targets
+  $(eval $(RUN_ARGS):;@:)
+endif
+
+.PHONY:test merge push deploy rsync now
 d=template2
 gulp:
 	@ gulp
@@ -25,16 +32,10 @@ push:
 	@ bash config/script-tools/push-git.sh
 deploy:
 	@ bash config/script-tools/push-git.sh prod $(e)
-delete-old-now:
-	@ bash config/script-tools/deploy-now.sh delete-old
-build-now:
-	@ bash config/script-tools/deploy-now.sh build
-deploy-now:
-	@ bash config/script-tools/deploy-now.sh
-alias-now:
-	@ bash config/script-tools/alias-now.sh
 now:
-	@ echo "source config/script-tools/n.sh"
+	@ # make now -- XXX
+	@ # will do now -t token XXXX
+	@ bash config/script-tools/now.sh $(RUN_ARGS)
 copy:
 	@ bash config/script-tools/copy.sh $(d)
 rsync:
