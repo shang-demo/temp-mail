@@ -113,6 +113,15 @@ function exitAll() {
   kill -9 $$
 }
 
+function isNumber() {
+  if grep '^[[:digit:]]*$' <<< "$1";then
+    # true
+    return 1
+  else
+    # false
+    return 0
+  fi
+}
 
 if [ -z "$*" ]
 then
