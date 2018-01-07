@@ -52,13 +52,13 @@ function deleteOldVersion() {
   local deleteUidList=$( echo $( echo ${deployments} | jq ".[] | select(.uid != ${maintainUid}) | .uid" ) )
 
   echo "deleteUidList: ${deleteUidList}"
-  echo ""
 
   declare -a arr=(${deleteUidList})
 
   for word in ${arr[@]}
   do
       echo ${word} | gsed -E "s/\"(.*)\"/\1/gi" | xargs -I {} curl -s --request DELETE --url https://api.zeit.co/now/deployments/{} --header "authorization: Bearer ${nowToken}"
+      echo ""
   done
 }
 

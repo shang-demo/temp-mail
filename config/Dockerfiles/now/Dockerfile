@@ -1,11 +1,10 @@
 FROM node:8.9
-ARG DEBIAN_FRONTEND=noninteractive
 
 WORKDIR /app
 
 # cache npm install
 COPY package.json /app
-RUN npm install && npm i -g pm2
+RUN npm install
 
 # copy project
 ADD . /app
