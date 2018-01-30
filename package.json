@@ -1,6 +1,6 @@
 {
-  "name": "server-template",
-  "version": "0.3.0",
+  "name": "temp-mail",
+  "version": "0.0.1",
   "main": "src/index.js",
   "repository": "https://github.com/shang-demo/server-template.git",
   "author": "xinshangshangxin <xinshangshangxin@gmail.com>",
