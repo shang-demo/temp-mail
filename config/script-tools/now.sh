@@ -1,36 +1,5 @@
 #!/usr/bin/env bash
 
-scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-projectDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd ../.. && pwd )"
-projectName=$( cat ${projectDir}/package.json | jq -r '.name' )
-
-cd ${scriptDir}
-
-function sourcePrivateEnv() {
-  local privateEnv=$( ls -a \
-   | grep -E "private-.*\.sh" \
-   | grep -v "private-env.default.sh")
-
-  declare -a arr=(${privateEnv})
-
-  for word in ${arr[@]}
-  do
-      source ${word}
-  done
-}
-
-# 先载入私有环境
-sourcePrivateEnv
-
-# 载入依赖
-source constants.sh
-source util.sh
-source build.sh
-
-function resetDir() {
-  cd ${projectDir}
-}
-
 function getAllDeployments() {
   echo $(curl -s --request GET \
    --url https://api.zeit.co/now/deployments \
@@ -72,7 +41,6 @@ function build() {
 }
 
 function deploy() {
-
   resetDir
   cd production
   echo "now -t ${nowToken} -n ${projectName} --public ${nowAppend}"
@@ -81,7 +49,7 @@ function deploy() {
 
 function logs() {
   local deployments=$(getDeployments)
-  local firstUid=$( echo ${deployments} | jq -r '. | first | .uid' )
+  local firstUid=$( echo ${deployments} | jq -r '. | first | .url' )
 
   local logsConfig="${firstUid} -f"
   local isNu=$(isNumber $1)
@@ -127,36 +95,68 @@ function getProjectAlias() {
 }
 
 
+# 如果没有参数, 就是deploy
 if [ -z "$*" ]
 then
-  deleteOldVersion
-  build
-  deploy
-  alias
-  getProjectAlias
-elif [ "$1" = "build" ]
-then
-  build
-elif [ "$1" = "deploy" ]
-then
-  deploy
-elif [ "$1" = "logs" ]
-then
-  argv=( "$@" )
-  logs ${argv[@]:1}
-elif [ "$1" = "remove" ]
-then
-  deleteOldVersion
-elif [ "$1" = "list" ]
-then
-   echo $( getAllDeployments ) | jq
-elif [ "$1" = "alias" ]
-then
-  alias
-  getProjectAlias
-else
-  echo "now -t ${nowToken} $*"
-  now -t ${nowToken} $*
+  set -- "d"
 fi
 
+
+# 参数判断
+while [[ $# -gt 0 ]]
+do
+key="$1"
+case ${key} in
+    d)
+    shift 1
+    deleteOldVersion
+    source build.sh now $*
+    deploy
+    alias
+    getProjectAlias
+    shift $#
+    ;;
+    build)
+    shift 1
+    source build.sh now $*
+    shift $#
+    ;;
+    logs)
+    shift 1
+    logs $*
+    shift $#
+    ;;
+    rm)
+    shift 1
+    deleteOldVersion
+    shift $#
+    ;;
+    ls)
+    shift 1
+    echo $( getAllDeployments ) | jq
+    shift $#
+    ;;
+    ln)
+    shift 1
+    alias
+    getProjectAlias
+    shift $#
+    ;;
+    deploy)
+    shift 1
+    deploy
+    shift $#
+    ;;
+    noConflict)
+    shift 1
+    echo "now -t ${nowToken} $*"
+    now -t ${nowToken} $*
+    shift $#
+    ;;
+    *)
+    echo ${key}
+    shift
+    ;;
+esac
+done
 

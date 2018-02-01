@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 # 不依赖外部环境变量即可运行的方法
 
+function resetDir() {
+  cd ${projectDir}
+}
+
 function _currentBranch() {
   git rev-parse --abbrev-ref HEAD
 }
@@ -96,10 +100,10 @@ function _getPushInfo() {
   local currentBranch=$(_currentBranch)
   local pushBranch=$(_getConfig "${env}.branch" "" "${configFilePath}")
 
-	if [ ${pushBranch} = "__package_name__" ]
+	if [ "${pushBranch}" = "__package_name__" ]
 	then
 	  pushBranch=$(_getConfig "name" "" "${projectDir}/package.json")
-	elif [ -z "${pushBranch}" -o ${pushBranch} = "null" ]
+	elif [ -z "${pushBranch}" -o "${pushBranch}" = "null" ]
 	then
 	  pushBranch=${currentBranch}
 	fi
@@ -114,16 +118,9 @@ function exitAll() {
 }
 
 function isNumber() {
-  if grep '^[[:digit:]]*$' <<< "$1";then
-    # true
-    return 1
+  if [[ $1 =~ ^-?[0-9]+([.]{1}[0-9]+){0,1}$ ]]  ; then
+    echo 1
   else
-    # false
-    return 0
+    echo 0
   fi
 }
-
-if [ -z "$*" ]
-then
-  $*
-fi

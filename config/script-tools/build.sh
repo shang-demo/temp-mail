@@ -3,9 +3,7 @@
 source util.sh
 
 function baseBuild() {
-  local nodeEnv=${1}
-  local envDockerDir=${2}
-  local buildDir=${3}
+  local nodeEnv=${1:-development}
 
   gulp buildServer
   echo "copy package.json"
@@ -13,10 +11,16 @@ function baseBuild() {
   cat package.json | jq ".scripts.start=\"NODE_ENV=${nodeEnv} pm2-docker start .\/index.js --raw\" | .devDependencies={}" > ${buildDir}/package.json
 
   _generateLog
-  _dockerConfig ${nodeEnv} ${envDockerDir}
+  _dockerConfig ${nodeEnv} ${projectDir}/${DockerfilePath}/${nodeEnv}
 }
 
-if [ -z "$*" ]
+if [ "$1" = "prod" ]
 then
-  $*
+  shift 1
+  set -- "production $*"
 fi
+
+
+echo "===== build $* ====="
+resetDir
+baseBuild $*

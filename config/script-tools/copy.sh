@@ -1,13 +1,5 @@
 #!/usr/bin/env bash
 
-scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-projectDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd ../.. && pwd )"
-
-# 载入依赖
-cd ${scriptDir}
-source constants.sh
-source util.sh
-
 function checkDependencies() {
 	_checkDependence gsed
 	_checkDependence jq
@@ -22,7 +14,7 @@ function initProject() {
 
 	if [ -z "$1" ]
 	then
-	  echo "need param 'd' to set copy dir"
+	  echo "need new project path to set"
 
     exitAll
   fi
@@ -31,7 +23,7 @@ function initProject() {
   then
     cpDir=$1
   else
-    cpDir="../../$1"
+    cpDir="~/$1"
   fi
   projectName=`basename ${cpDir}`
 
