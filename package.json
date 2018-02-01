@@ -28,6 +28,7 @@
     "koa-graphql": "^0.7.3",
     "koa-router": "^7.2.1",
     "lodash": "^4.17.4",
+    "mailin": "^3.0.4",
     "mongodb-uri": "^0.9.7",
     "mongoose": "^4.11.4",
     "nodemailer": "^4.0.1",
@@ -35,7 +36,8 @@
     "pm2": "^2.6.1",
     "redis": "^2.7.1",
     "request": "^2.81.0",
-    "request-promise": "^4.2.1"
+    "request-promise": "^4.2.1",
+    "socket.io": "^2.0.4"
   },
   "devDependencies": {
     "ava": "^0.21.0",

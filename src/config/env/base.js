@@ -25,5 +25,7 @@ module.exports = {
   graphql: {
     graphiql: true,
   },
-  bootstrap: [],
+  bootstrap: [
+    'ReceiveMail',
+  ],
 };

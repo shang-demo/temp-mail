@@ -9,5 +9,9 @@ module.exports = {
       database: 'noName',
     },
   },
-  bootstrap: [],
+  mailin: {
+    host: '0.0.0.0',
+    port: 25000,
+    disableWebhook: true,
+  },
 };

@@ -23,5 +23,12 @@ module.exports = {
   },
   port: process.env.PORT || 8080,
   ip: undefined,
-  bootstrap: [],
+  mailin: {
+    host: '0.0.0.0',
+    port: 25,
+    disableWebhook: true,
+  },
+  mailBackup: {
+    to: process.env.MAIL_BACKUP_TO,
+  },
 };
