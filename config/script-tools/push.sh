@@ -1,25 +1,6 @@
 #!/usr/bin/env bash
 
-scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-projectDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd ../.. && pwd )"
-
-# 载入依赖
-cd ${scriptDir}
-source constants.sh
-source util.sh
-source build.sh
-
-function resetDir() {
-  cd ${projectDir}
-}
-
-function checkDependencies() {
-	_checkDependence gsed
-	_checkDependence jq
-}
-
 function push() {
-
   local env=${1:-dev}
   local nodeEnv=${2:-${defaultEnv}}
 
@@ -31,40 +12,44 @@ function push() {
 
   local pushInfo=( $(_getPushInfo ${projectDir}/${defaultConfigPath} ${projectDir} ${env}) )
 
-  echo ${pushInfo[*]}
-
   local pushUrl=${pushInfo[0]}
   local pushRemote=${pushInfo[1]}
   local currentBranch=${pushInfo[2]}
   local pushBranch=${pushInfo[3]}
 
+  if [ -z "${pushUrl}" -o -z "${pushRemote}" -o -z "${currentBranch}" -o -z "${pushBranch}" ]
+  then
+    echo "${env} config not correct: ${pushInfo[*]}"
+    kill -9 $$
+    exit 1
+  fi
+
   _initGit ${pushRemote} ${pushUrl}
 
   if [ ${env} = "prod" ]
   then
-    local envDockerDir=${projectDir}/${DockerfilePath}/${nodeEnv}
     resetDir
-    baseBuild ${nodeEnv} ${envDockerDir} ${buildDir}
-
     cd ${buildDir}
-    git add -A
+    echo "run cmd at $(pwd)"
     now=`date +%Y_%m_%d_%H_%M_%S`
+    git add -A
     git commit -m "${now}" || echo ""
-    echo $(pwd)
     echo "git push ${pushRemote} ${currentBranch}:${pushBranch}(${nodeEnv}) -f"
 	  git push ${pushRemote} ${currentBranch}:${pushBranch}\(${nodeEnv}\) -f
   else
-    echo $(pwd)
+    echo "run cmd at $(pwd)"
     echo "git push ${pushRemote} ${currentBranch}:${pushBranch}"
 	  git push ${pushRemote} ${currentBranch}:${pushBranch}
 	fi
 }
 
 
-function lift() {
-  checkDependencies
+if [ "$1" != "" -a "$1" != "development" ]
+then
+  cd ${scriptDir}
+  source build.sh $*
+fi
 
-  push $*
-}
-
-lift $*
+echo "===== push $* ====="
+resetDir
+push $*
