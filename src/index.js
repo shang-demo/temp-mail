@@ -12,11 +12,14 @@ const lift = new My({ alias: 'mKoa' })
   .use('graphql-route')
   .use('koa')
   .use('koa-route')
+  .use('koa-server')
+  .use('socket.io')
   .on('error', (e) => {
     // eslint-disable-next-line no-console
     console.warn(e);
     process.exit(1);
   })
   .lift();
+
 
 module.exports = lift;

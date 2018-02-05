@@ -21,6 +21,7 @@
     "graphql": "^0.10.5",
     "graphql-iso-date": "^3.2.0",
     "graphql-type-json": "^0.1.4",
+    "humps": "^2.0.1",
     "jwt-simple": "^0.5.1",
     "kcors": "^2.2.1",
     "koa": "^2.3.0",
@@ -35,7 +36,8 @@
     "pm2": "^2.6.1",
     "redis": "^2.7.1",
     "request": "^2.81.0",
-    "request-promise": "^4.2.1"
+    "request-promise": "^4.2.1",
+    "socket.io": "^2.0.4"
   },
   "devDependencies": {
     "ava": "^0.21.0",

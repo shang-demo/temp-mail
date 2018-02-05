@@ -26,4 +26,7 @@ module.exports = {
     graphiql: true,
   },
   bootstrap: [],
+  socketIO: {
+    keys: ['purpose'],
+  },
 };
