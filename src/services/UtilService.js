@@ -108,14 +108,14 @@ const svc = {
     }
     return action().then(svc.promiseWhile.bind(null, condition, action));
   }),
-  escapeRegExp(str, disAbleRegExp) {
+  escapeRegExp(str, disableRegExp) {
     if (!str) {
       return null;
     }
 
     // eslint-disable-next-line no-param-reassign
     str = str.replace(/[-[\]/{}()*+?.\\^$|]/g, '\\$&');
-    if (disAbleRegExp === true) {
+    if (disableRegExp === true) {
       return str;
     }
 
@@ -302,6 +302,21 @@ const svc = {
     }
 
     return types;
+  },
+
+  tryParseJsonObject(value, defaultValue) {
+    if (_.isObject(value)) {
+      return value;
+    }
+    if (typeof value === 'string') {
+      try {
+        return JSON.parse(value) || defaultValue;
+      }
+      catch (ex) {
+        return defaultValue;
+      }
+    }
+    return defaultValue;
   },
 };
 

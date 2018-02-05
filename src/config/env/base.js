@@ -29,13 +29,31 @@ module.exports = {
       text: 'text',
       html: '<b>Hello world ✔</b>', // html body
     },
+    in: {
+      url: 'ws://lsyx.online:25000/',
+    },
+    out: {
+      logger: true,
+      host: 'lsyx.online',
+      port: 25,
+      secure: false,
+      tls: {
+        rejectUnauthorized: false,
+      },
+      auth: {
+        user: 'username',
+        pass: 'password',
+      },
+    },
   },
   port: process.env.PORT || 1337,
   graphql: {
     graphiql: true,
   },
-  bootstrap: [],
+  bootstrap: [
+    'MailInService',
+  ],
   socketIO: {
-    keys: ['purpose'],
+    keys: ['shortId'],
   },
 };

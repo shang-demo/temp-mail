@@ -1,12 +1,12 @@
 {
   "dev": {
-    "url": "git@github.com:shang-demo/server-template.git",
-    "remote": "template",
-    "branch": "v3"
+    "url": "git@github.com:shang-demo/temp-mail.git",
+    "remote": "dev",
+    "branch": "__package_name__"
   },
   "prod": {
     "url": "git@gitlab.com:demoshang/server-projects.git",
-    "remote": "prod",
+    "remote": "dist",
     "branch": "__package_name__"
   },
   "merge": {

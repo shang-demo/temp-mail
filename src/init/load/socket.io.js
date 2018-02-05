@@ -108,8 +108,9 @@ const svc = {
   },
   emit(clientProps, data, event) {
     let roomId = svc.getRoomId(clientProps);
-    logger.info('roomId: ', roomId);
-    logger.info('event: ', event);
+    logger.debug('roomId: ', roomId);
+    logger.debug('event: ', event);
+    logger.debug('data: ', data);
 
     if (!roomId) {
       io.emit(event, data);
@@ -121,7 +122,7 @@ const svc = {
         if (err) {
           return null;
         }
-        logger.info(`${roomId} clients length: `, clients.length);
+        logger.debug(`${roomId} clients length: `, clients.length);
         return null;
       });
     }
