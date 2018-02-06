@@ -1,17 +1,12 @@
 {
   "dev": {
-    "url": "git@github.com:shang-demo/client-template.git",
-    "remote": "template",
-    "branch": "v3"
+    "url": "",
+    "remote": "origin",
+    "branch": ""
   },
   "deploy": {
     "url": "git@gitlab.com:demoshang/client-projects.git",
     "remote": "prod",
     "branch": "__package_name__"
-  },
-  "merge": {
-    "url": "https://github.com/shang-demo/client-template.git",
-    "remote": "template",
-    "branch": "v3"
   }
 }

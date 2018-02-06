@@ -1,6 +1,6 @@
 {
-  "name": "angular-starter",
-  "version": "6.0.0",
+  "name": "temp-mail-frontend",
+  "version": "0.0.1",
   "description": "An Angular Webpack Starter kit featuring Angular (Router, Http, Forms, Services, Tests, E2E, Coverage), Karma, Protractor, Jasmine, Istanbul, TypeScript, and Webpack by AngularClass",
   "keywords": [
     "angular",

@@ -2,8 +2,8 @@
 start:
 	npm run start:hmr
 merge:
-	git fetch template __template_branch__
-	git merge remotes/template/__template_branch__
+	git fetch template v3
+	git merge remotes/template/v3
 push:
 	@ sh config/push.sh
 deploy:

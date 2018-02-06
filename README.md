@@ -1,5 +1,1 @@
-## clientTemplate
-
-- angular
-- webpack
-- Ant Design
+# temp-mail-frontend
