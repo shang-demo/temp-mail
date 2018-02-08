@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 // first under package.json same dir run npm install mailparser uws
+=======
+>>>>>>> 3060cf58c7ac5740f8da1705dada0f43681c6af6
 const simpleParser = require('mailparser').simpleParser;
 const WebSocket = require('uws');
 
