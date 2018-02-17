@@ -1,0 +1,8 @@
+[submodule "haraka-config"]
+	path = haraka-config
+	url = git@github.com:shang-demo/temp-mail.git
+	branch = haraka-config
+[submodule "backend"]
+	path = backend
+	url = git@github.com:shang-demo/temp-mail.git
+	branch = temp-mail-backend
