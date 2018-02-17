@@ -1,8 +1,8 @@
 {
   "dev": {
-    "url": "",
+    "url": "git@github.com:shang-demo/temp-mail.git",
     "remote": "origin",
-    "branch": ""
+    "branch": "temp-mail-frontend"
   },
   "deploy": {
     "url": "git@gitlab.com:demoshang/client-projects.git",

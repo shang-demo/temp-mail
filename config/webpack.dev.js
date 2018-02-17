@@ -31,7 +31,9 @@ const METADATA = {
   public: PUBLIC,
   ENV: ENV,
   HMR: HMR,
-  AOT: AOT
+  AOT: AOT,
+  SERVER_URL: 'http://127.0.0.1:1337',
+  MAIL_DOMAIN: 'tempemail.top',
 };
 
 
@@ -142,7 +144,9 @@ module.exports = function (options) {
         'HMR': METADATA.HMR,
         'process.env.ENV': JSON.stringify(METADATA.ENV),
         'process.env.NODE_ENV': JSON.stringify(METADATA.ENV),
-        'process.env.HMR': METADATA.HMR
+        'process.env.HMR': METADATA.HMR,
+        'SERVER_URL': JSON.stringify(METADATA.SERVER_URL),
+        'MAIL_DOMAIN': JSON.stringify(METADATA.MAIL_DOMAIN),
       }),
 
       // new DllBundlesPlugin({

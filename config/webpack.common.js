@@ -32,17 +32,13 @@ const HMR = helpers.hasProcessFlag('hot');
 const AOT = process.env.BUILD_AOT || helpers.hasNpmFlag('aot');
 const METADATA = {
   title: {
-    prod: 'Angular2 Webpack Starter',
+    prod: 'temp email',
     default: 'development',
   },
   baseUrl: '/',
   isDevServer: helpers.isWebpackDevServer(),
   HMR: HMR,
   AOT: AOT,
-  SERVER_URL: {
-    default: 'http://localhost:1337',
-    prod: 'http://localhost:1337'
-  },
 };
 
 /**
@@ -202,21 +198,6 @@ module.exports = function (options) {
           test: /\.(eot|woff2?|svg|ttf)([\?]?.*)$/,
           use: 'file-loader'
         },
-
-        {
-          test: /\.ts$/,
-          loader: 'string-replace-loader',
-          query: {
-            multiple: [
-              {
-                search: 'SERVER_URL',
-                replace: isProd ? METADATA.SERVER_URL.prod : METADATA.SERVER_URL.default,
-              },
-            ]
-
-          }
-        }
-
       ],
 
     },

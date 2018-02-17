@@ -10,7 +10,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { NgProgressModule, NgProgressInterceptor } from 'ngx-progressbar';
 import { ApolloModule } from 'apollo-angular';
-import { MatButtonModule } from '@angular/material';
+import {
+  MatButtonModule,
+  MatChipsModule,
+  MatExpansionModule,
+  MatFormFieldModule,
+  MatInputModule, MatSnackBarModule, MatToolbarModule,
+} from '@angular/material';
 
 /*
  * Platform and Environment providers/directives/pipes
@@ -26,6 +32,12 @@ import { HomeComponent } from './home';
 import '../styles/styles.scss';
 import { provideClient } from './utils/apollo-client/provide-client';
 import { HomeService } from './home/home.service';
+import { MailInComponent } from './mail/mail-in/mail-in.component';
+import { MySafeHtmlPipe } from './utils/safe-html';
+import { MailService } from './mail/mail.service';
+import { MailOutComponent } from './mail/mail-out/mail-out.component';
+import { MailComponent } from './mail/mail.component';
+import { MailSendHistoryComponent } from './mail/mail-send-history/mail-send-history.component';
 
 // Application wide providers
 const APP_PROVIDERS = [
@@ -43,10 +55,15 @@ interface StoreType {
  * `AppModule` is the main entry point into Angular2's bootstraping process
  */
 @NgModule({
-  bootstrap: [ AppComponent ],
+  bootstrap: [AppComponent],
   declarations: [
+    MySafeHtmlPipe,
     AppComponent,
     HomeComponent,
+    MailInComponent,
+    MailOutComponent,
+    MailComponent,
+    MailSendHistoryComponent,
   ],
   /**
    * Import Angular's modules.
@@ -59,12 +76,18 @@ interface StoreType {
     HttpClientModule,
     RouterModule.forRoot(ROUTES, {
       useHash: true,
-      preloadingStrategy: PreloadAllModules
+      preloadingStrategy: PreloadAllModules,
     }),
     ApolloModule.forRoot(provideClient),
     NgProgressModule,
 
     MatButtonModule,
+    MatExpansionModule,
+    MatChipsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatToolbarModule,
+    MatSnackBarModule,
   ],
   /**
    * Expose our Services and Providers into Angular's dependency injection.
@@ -78,6 +101,7 @@ interface StoreType {
       multi: true,
     },
     HomeService,
+    MailService,
   ],
 })
 export class AppModule {
@@ -122,7 +146,7 @@ export class AppModule {
     /**
      * Save input values
      */
-    store.restoreInputValues  = createInputTransfer();
+    store.restoreInputValues = createInputTransfer();
     /**
      * Remove styles
      */

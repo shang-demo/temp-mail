@@ -1,0 +1,17 @@
+<mat-toolbar>
+  <div class="title">
+    <span class="shortId">{{shortId}}@{{ mailDomain }}</span>
+    <span class="operation">
+    <button mat-raised-button
+            [routerLink]=" ['./in'] "
+            routerLinkActive="active">收件箱</button>
+    <button mat-raised-button
+            [routerLink]=" ['./send-history'] "
+            routerLinkActive="active">已发送</button>
+    <button mat-raised-button
+            [routerLink]=" ['./out'] "
+            routerLinkActive="active">写信</button>
+  </span>
+  </div>
+</mat-toolbar>
+<router-outlet></router-outlet>

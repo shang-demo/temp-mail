@@ -46,6 +46,9 @@ import * as _ from 'lodash'
 // support NodeJS modules without type definitions
 declare module '*';
 
+declare var SERVER_URL: string;
+declare var MAIL_DOMAIN: string;
+
 /*
 // for legacy tslint etc to understand rename 'modern-lru' with your package
 // then comment out `declare module '*';`. For each new module copy/paste

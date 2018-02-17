@@ -1,0 +1,8 @@
+.mail-out {
+  display: flex;
+  flex-direction: column;
+}
+
+.mail-out > * {
+  width: 100%;
+}

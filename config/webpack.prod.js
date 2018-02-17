@@ -38,7 +38,9 @@ const METADATA = {
   port: PORT,
   ENV: ENV,
   HMR: false,
-  AOT: AOT
+  AOT: AOT,
+  SERVER_URL: 'https://tempemail.xinshangshangxin.com',
+  MAIL_DOMAIN: 'tempemail.top',
 };
 
 module.exports = function (env) {
@@ -169,7 +171,9 @@ module.exports = function (env) {
         'AOT': METADATA.AOT,
         'process.env.ENV': JSON.stringify(METADATA.ENV),
         'process.env.NODE_ENV': JSON.stringify(METADATA.ENV),
-        'process.env.HMR': METADATA.HMR
+        'process.env.HMR': METADATA.HMR,
+        'SERVER_URL': JSON.stringify(METADATA.SERVER_URL),
+        'MAIL_DOMAIN': JSON.stringify(METADATA.MAIL_DOMAIN),
       }),
 
       /**

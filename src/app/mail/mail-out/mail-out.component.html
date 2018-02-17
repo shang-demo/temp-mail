@@ -1,0 +1,22 @@
+<form (ngSubmit)="send()" #mailOutForm="ngForm" class="mail-out">
+  <mat-form-field>
+    <input matInput placeholder="to" [(ngModel)]="mailOut.to" name="to">
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="subject" [(ngModel)]="mailOut.subject" name="subject">
+  </mat-form-field>
+
+  <mat-form-field>
+    <textarea matInput placeholder="body" [(ngModel)]="mailOut.html" name="html"></textarea>
+  </mat-form-field>
+
+  <button mat-button type="submit" [disabled]="saving">保存</button>
+  <button mat-button [routerLink]=" ['../in'] "
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{exact: true}">
+    返回
+  </button>
+</form>
+
+
