@@ -1,7 +1,7 @@
 # temp-mail
 
 ## 在线示例  
-[http://test.tempemail.top/](http://test.tempemail.top/)
+[https://test.tempemail.top/](https://test.tempemail.top/)
 
 ## 分支[haraka-config](https://github.com/shang-demo/temp-mail/tree/haraka-config)  
 [Haraka](https://github.com/haraka/Haraka)的最简单可运行的配置, 详细内容看文章 [haraka收发邮件初级教程](https://blog.xinshangshangxin.com/2018/02/04/haraka-introduction/)
