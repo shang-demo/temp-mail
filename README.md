@@ -17,7 +17,7 @@
 git submodule add -b [branch] [git remote url] [local dir name]
 ```
 
-## [git submodule 更新]
+## [git submodule 更新](https://stackoverflow.com/questions/1777854/git-submodules-specify-a-branch-tag#answer-15782629)
 ```bash
 git submodule update --remote
 ```
