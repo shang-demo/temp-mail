@@ -14,4 +14,11 @@ module.exports = {
     port: 25000,
     disableWebhook: true,
   },
+  rabbitmq: {
+    username: '',
+    password: '',
+    host: '127.0.0.1',
+    port: '',
+    reconnectDelay: 0,
+  },
 };

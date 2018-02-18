@@ -105,6 +105,17 @@ declare let mKoa = {
     schema: object,
     routes: function,
   },
+  socketIO: {
+    get: function,
+    getRoomId: function,
+    emit: function,
+    addConnectionListener: function,
+    removeConnectionListener: function,
+  },
+  rabbitmq: {
+    addConsume: function,
+    publish: function,
+  },
 };
 `;
     });

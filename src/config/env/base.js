@@ -77,4 +77,12 @@ module.exports = {
   socketIO: {
     keys: ['shortId'],
   },
+  rabbitmq: {
+    username: '',
+    password: '',
+    host: '127.0.0.1',
+    port: '',
+    // url: `amqp://rabbitmq:${RABBITMQ_PASSWORD}@${RABBITMQ_DOMAIL}:${RABBITMQ_PORT}`,
+    reconnectDelay: 0,
+  },
 };

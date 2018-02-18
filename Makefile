@@ -1,4 +1,5 @@
 .PHONY:*
+prodNodeEnv:=$(shell cat Makefile.rsync.env.private)
 
 gulp:
 	@ gulp
