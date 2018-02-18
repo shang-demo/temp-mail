@@ -17,6 +17,11 @@
 git submodule add -b [branch] [git remote url] [local dir name]
 ```
 
+## [git submodule 更新]
+```bash
+git submodule update --remote
+```
+
 ## clone 本项目到本地
 ```bash
 git clone git@github.com:shang-demo/temp-mail.git --recursive
