@@ -1,4 +1,5 @@
 .PHONY:*
+prodNodeEnv:=$(shell cat Makefile.rsync.env.private)
 
 gulp:
 	@ gulp
@@ -18,10 +19,10 @@ merge:
 	git fetch __template_remote__ __template_branch__
 	git merge remotes/__template_remote__/__template_branch__
 rsync:
-	cp ./package.json ./production
-	gsed -i 's/"start": ".*/"start": "PORT=8080 NODE_ENV=production pm2 start .\/index.js --name __project__name__:8080",/g' ./production/package.json
-	rsync --exclude .tmp --exclude node_modules -cazvF -e "ssh -p 22" ./production/ root@112.74.107.82:/root/production/__project__name__
-
+	cp ./package.json ./production 
+	gsed -i 's/"start": ".*/"start": "pm2 stop __project__name__ \|\| echo \\"\\" \&\& $(prodNodeEnv) pm2 start .\/index.js --name __project__name__ --update-env",/g' ./production/package.json
+	rsync --exclude .tmp --exclude node_modules -azvP -e "ssh -p 22" ./production/ root@112.74.107.82:/root/production/__project__name__
+	ssh -p 22 root@112.74.107.82  ". /etc/profile; cd /root/production/__project__name__; npm start; sleep 3; pm2 logs __project__name__ --lines 20 --nostream"
 
 ifeq ($(firstword $(MAKECMDGOALS)), $(filter $(firstword $(MAKECMDGOALS)),build push now))
   # use the rest as arguments for "run"
