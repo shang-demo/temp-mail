@@ -1,5 +1,5 @@
-const MONGODB_DATABASE = 'production';
-const MONGODB_USERNAME = 'productionUser';
+const MONGODB_DATABASE = 'tempMail';
+const MONGODB_USERNAME = 'tempMailUser';
 const MONGODB_PASSWORD = process.env.MONGODB_PASSWORD;
 
 module.exports = {

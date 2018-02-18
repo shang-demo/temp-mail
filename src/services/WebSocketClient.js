@@ -1,13 +1,17 @@
 const WebSocket = require('uws');
 
-function WebSocketClient() {
+function WebSocketClient(maxReconnectInterval) {
   this.number = 0;
-  this.autoReconnectInterval = 5 * 1000;
+  this.reconnectIndex = 0;
+  this.autoReconnectInterval = 1000;
+  this.maxReconnectInterval = maxReconnectInterval || 5000;
 }
+
 WebSocketClient.prototype.open = function open(url) {
   this.url = url;
   this.instance = new WebSocket(this.url);
   this.instance.on('open', () => {
+    this.reconnectIndex = 0;
     this.onopen();
   });
   this.instance.on('message', (data, flags) => {
@@ -32,6 +36,7 @@ WebSocketClient.prototype.open = function open(url) {
         break;
       default:
         this.onerror(e);
+        this.reconnect(e);
         break;
     }
   });
@@ -45,7 +50,14 @@ WebSocketClient.prototype.send = function send(data, option) {
   }
 };
 WebSocketClient.prototype.reconnect = function reconnect(e) {
+  this.autoReconnectInterval = this.reconnectIndex * 1000;
+  if (this.autoReconnectInterval > this.maxReconnectInterval) {
+    this.autoReconnectInterval = this.maxReconnectInterval;
+  }
+
   logger.info(`WebSocketClient: retry in ${this.autoReconnectInterval}ms`, e);
+  this.reconnectIndex = this.reconnectIndex + 1;
+
   this.instance.removeAllListeners();
   let that = this;
   setTimeout(() => {

@@ -1,3 +1,17 @@
+const MAIL_DOMAIN = process.env.MAIL_DOMAIN;
+const MAIL_OUT_AUTH_PASSWORD = process.env.MAIL_OUT_AUTH_PASSWORD;
+
+const RABBITMQ_DOMAIL = process.env.RABBITMQ_DOMAIL;
+const RABBITMQ_PASSWORD = process.env.RABBITMQ_PASSWORD;
+const RABBITMQ_PORT = process.env.RABBITMQ_PORT;
+
+
+if (!MAIL_DOMAIN || !MAIL_OUT_AUTH_PASSWORD) {
+  // eslint-disable-next-line no-console
+  console.warn(new Error('process.env error'));
+  process.exit(1);
+}
+
 module.exports = {
   log: {
     level: 'trace',
@@ -25,16 +39,14 @@ module.exports = {
     defaultOptions: {
       from: 'test4code@sina.com',
       to: 'codenotification@sina.com',
-      subject: 'subject',
-      text: 'text',
-      html: '<b>Hello world ✔</b>', // html body
+      subject: '',
+      text: '',
+      html: '',
     },
-    in: {
-      url: 'ws://lsyx.online:25000/',
-    },
+    domain: MAIL_DOMAIN,
     out: {
       logger: true,
-      host: 'lsyx.online',
+      host: MAIL_DOMAIN,
       port: 25,
       secure: false,
       tls: {
@@ -42,9 +54,17 @@ module.exports = {
       },
       auth: {
         user: 'username',
-        pass: 'password',
+        pass: MAIL_OUT_AUTH_PASSWORD,
       },
     },
+  },
+  rabbitmq: {
+    username: 'rabbitmq',
+    password: RABBITMQ_PASSWORD,
+    host: RABBITMQ_DOMAIL,
+    port: RABBITMQ_PORT,
+    // url: `amqp://rabbitmq:${RABBITMQ_PASSWORD}@${RABBITMQ_DOMAIL}:${RABBITMQ_PORT}`,
+    reconnectDelay: 0,
   },
   port: process.env.PORT || 1337,
   graphql: {
@@ -52,6 +72,7 @@ module.exports = {
   },
   bootstrap: [
     'MailInService',
+    'MailOutService',
   ],
   socketIO: {
     keys: ['shortId'],
