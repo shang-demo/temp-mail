@@ -112,6 +112,10 @@ declare let mKoa = {
     addConnectionListener: function,
     removeConnectionListener: function,
   },
+  rabbitmq: {
+    addConsume: function,
+    publish: function,
+  },
 };
 `;
     });
