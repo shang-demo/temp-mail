@@ -14,6 +14,7 @@ const lift = new My({ alias: 'mKoa' })
   .use('koa-route')
   .use('koa-server')
   .use('socket.io')
+  .use('lifted-ascii')
   .on('error', (e) => {
     // eslint-disable-next-line no-console
     console.warn(e);
