@@ -13,9 +13,9 @@ const lift = new My({ alias: 'mKoa' })
   .use('koa-route')
   .use('koa-server')
   .use('rabbitmq')
-  .use('bootstrap')
   .use('socket.io')
   .use('lifted-ascii')
+  .use('bootstrap')
   .on('error', (e) => {
     // eslint-disable-next-line no-console
     console.warn(e);
